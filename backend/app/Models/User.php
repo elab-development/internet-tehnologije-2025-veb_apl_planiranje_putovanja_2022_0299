@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'ime',
+        'prezime',
         'email',
         'password',
+        'role',
+
     ];
 
     /**
@@ -42,4 +45,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+     public function recenzije(): HasMany
+    {
+        return $this->hasMany(Recenzija::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->uloga === 'admin';
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->uloga === 'moderator';
+    }
 }
+
