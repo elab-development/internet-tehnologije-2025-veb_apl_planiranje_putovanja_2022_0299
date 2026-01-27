@@ -12,7 +12,6 @@ class Aktivnost extends Model
 
     protected $fillable = [
         'destinacija_id',
-        'ime',
         'naziv',
         'cena',
         'trajanje',

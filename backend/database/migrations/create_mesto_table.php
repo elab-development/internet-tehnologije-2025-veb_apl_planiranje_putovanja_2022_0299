@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('adresa')->nullable();
             $table->decimal('geografska_sirina', 10, 7)->nullable();
             $table->decimal('geografska_duzina', 10, 7)->nullable();
-            $table->unsignedTinyInteger('prosecna_ocena')->nullable();
             $table->timestamps();
         });
     }
