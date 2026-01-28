@@ -26,7 +26,7 @@ class AktivnostController extends Controller
  
     public function index(Request $request)
     {
-        if ($resp = $this->ensureAdmin()) return $resp;
+       // if ($resp = $this->ensureAdmin()) return $resp;
 
         $validated = $request->validate([
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
@@ -51,7 +51,7 @@ class AktivnostController extends Controller
 
     public function show(Aktivnost $aktivnost)
     {
-        if ($resp = $this->ensureAdmin()) return $resp;
+       // if ($resp = $this->ensureAdmin()) return $resp;
 
         return response()->json($aktivnost->load('destinacija'));
     }
