@@ -15,7 +15,7 @@ class Recenzija extends Model
         'mesto_id',
         'ocena',
         'deskripcija',
-        'datum',
+        //'datum',
     ];
 
     public function user(): BelongsTo

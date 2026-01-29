@@ -39,8 +39,8 @@ Route::get('/places', [MestoController::class, 'index']);
 Route::get('/places/{place}/reviews', [RecenzijaController::class, 'index']);
 Route::get('/places/{place}', [MestoController::class, 'show']);
 
-Route::get('/activities', [AktivnostController::class, 'index']);
-Route::get('/activities/{activity}', [AktivnostController::class, 'show']);
+Route::get('/aktivnosti', [AktivnostController::class, 'index']);
+Route::get('/aktivnosti/{aktivnost}', [AktivnostController::class, 'show']);
 
 
 
@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::resource('reviews', RecenzijaController::class)
                 ->only(['store', 'destroy']);
 
-        Route::resource('activities', AktivnostController::class)
+        Route::resource('aktivnosti', AktivnostController::class)
                 ->only(['store', 'update', 'destroy']);
 
 });

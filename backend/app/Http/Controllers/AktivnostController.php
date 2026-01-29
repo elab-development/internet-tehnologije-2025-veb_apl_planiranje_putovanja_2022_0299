@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Aktivnost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\AktivnostResource;
+
 
 class AktivnostController extends Controller
 {
@@ -46,14 +48,15 @@ class AktivnostController extends Controller
 
         $aktivnosti = $q->paginate($perPage)->appends($request->query());
 
-        return response()->json($aktivnosti);
+        return AktivnostResource::collection($aktivnosti);
+
     }
 
     public function show(Aktivnost $aktivnost)
     {
        // if ($resp = $this->ensureAdmin()) return $resp;
 
-        return response()->json($aktivnost->load('destinacija'));
+        return new AktivnostResource($aktivnost->load('destinacija'));
     }
 
  
@@ -73,7 +76,7 @@ class AktivnostController extends Controller
 
         return response()->json([
             'message' => 'Aktivnost created successfully',
-            'aktivnost' => $aktivnost->load('destinacija'),
+            'aktivnost' => new AktivnostResource($aktivnost->load('destinacija')),
         ], 201);
     }
 
@@ -94,7 +97,7 @@ class AktivnostController extends Controller
 
         return response()->json([
             'message' => 'Aktivnost updated successfully',
-            'aktivnost' => $aktivnost->load('destinacija'),
+            'aktivnost' => new AktivnostResource($aktivnost->load('destinacija')),
         ]);
     }
 

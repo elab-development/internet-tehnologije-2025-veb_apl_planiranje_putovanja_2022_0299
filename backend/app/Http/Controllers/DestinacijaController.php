@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\DestinacijaResource;
 
 class DestinacijaController extends Controller
 {
@@ -52,8 +53,9 @@ class DestinacijaController extends Controller
         }
 
         return response()->json([
+
             'count' => $destinations->count(),
-            'destinations' => $destinations,
+            'destinations' => DestinacijaResource::collection($destinations),
         ]);
     }
 
@@ -94,7 +96,7 @@ class DestinacijaController extends Controller
 
         return response()->json([
             'message' => 'Destination created successfully',
-            'destination' => $destination,
+            'destination' => new DestinacijaResource($destination),
         ], 201);
     }
 
@@ -106,7 +108,8 @@ class DestinacijaController extends Controller
         $destination->loadCount(['mesta', 'aktivnosti']);
 
         return response()->json([
-            'destination' => $destination,
+            'destination' => new DestinacijaResource($destination),
+
         ]);
     }
 
@@ -167,7 +170,7 @@ class DestinacijaController extends Controller
 
         return response()->json([
             'message' => 'Destination updated successfully',
-            'destination' =>$destination,
+            'destination' => new DestinacijaResource($destination),
         ]);
     }
 

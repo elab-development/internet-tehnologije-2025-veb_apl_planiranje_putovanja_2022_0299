@@ -7,6 +7,7 @@ use App\Models\Recenzija;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\RecenzijaResource;
 
 class RecenzijaController extends Controller
 {
@@ -28,7 +29,7 @@ class RecenzijaController extends Controller
             ->paginate($perPage)
             ->appends($request->query());
 
-        return response()->json($reviews);
+        return RecenzijaResource::collection($reviews);
 
     }
 
@@ -51,7 +52,7 @@ class RecenzijaController extends Controller
             ->paginate($perPage)
             ->appends($request->query());
 
-        return response()->json($reviews);
+        return RecenzijaResource::collection($reviews);
 
     }
 
@@ -97,7 +98,7 @@ class RecenzijaController extends Controller
 
         return response()->json([
             'message' => 'Review created successfully',
-            'review'  => $review->load('user', 'mesto'),
+            'review'  => new RecenzijaResource($review->load('user', 'mesto')),
         ], 201);
     }
 

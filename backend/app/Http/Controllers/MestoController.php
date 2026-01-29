@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use App\Http\Resources\MestoResource;
 
 class MestoController extends Controller
 {
@@ -43,7 +44,7 @@ class MestoController extends Controller
 
         $places = $query->paginate($perPage)->appends($request->query());
 
-        return response()->json($places);
+        return MestoResource::collection($places);
         }
 
     /**
@@ -83,12 +84,11 @@ class MestoController extends Controller
 
 
        $place = Mesto::create($validated);
-       $place->load('destinacija')->loadCount('recenzije');
-
-return response()->json([
-    'message' => 'Place created successfully',
-    'place' => $place,
-], 201);
+       
+            return response()->json([
+                'message' => 'Place created successfully',
+                'place' => new MestoResource($place->load('destination')->loadCount('reviews')),
+            ], 201);
 
     }
 
@@ -101,7 +101,7 @@ return response()->json([
 
         return response()->json([      
 
-        'place' => $place,
+        'place' =>  new MestoResource($place),
     ]);
     }
 
@@ -151,7 +151,7 @@ return response()->json([
         if (empty($validated)) {
             return response()->json([       
                 'message' => 'Nothing to update',
-'place'=>$place
+                'place' => new MestoResource($place->load('destination')->loadCount('reviews'))
             ]);
         }
 
@@ -159,7 +159,7 @@ return response()->json([
 
         return response()->json([     
             'message' => 'Place updated successfully',
-            'place'   => $place,
+            'place'   => new MestoResource($place->load('destination')->loadCount('reviews')),
         ]);
     }
 
