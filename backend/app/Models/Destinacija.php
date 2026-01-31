@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Destinacija extends Model
 {
     use HasFactory;    
+    
+    protected $table = 'destinacije';
 
     protected $fillable = [
         'ime',

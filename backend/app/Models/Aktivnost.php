@@ -10,6 +10,8 @@ class Aktivnost extends Model
 {
     use HasFactory;    
 
+    protected $table = 'aktivnosti';
+    
     protected $fillable = [
         'destinacija_id',
         'naziv',

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Mesto extends Model
 {
-    use HasFactory;    use HasFactory;
+    use HasFactory; 
+
+    protected $table = 'mesta';
 
     protected $fillable = [
         'destinacija_id',
