@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Recenzija extends Model
 {
     use HasFactory;   
+    
+    protected $table = 'recenzije';
 
     protected $fillable = [
         'user_id',
