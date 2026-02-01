@@ -8,6 +8,11 @@
   background-color: transparent;
   color: #1e293b;
 }
+
+.activepagination {
+  background-color: #16a34a;
+}
+
   .loader {
   width: 100px;
   height: 100px;

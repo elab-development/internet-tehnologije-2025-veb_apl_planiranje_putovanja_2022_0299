@@ -15,7 +15,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
 
   return (
     <div className='flex items-center justify-center '>
-      <div className='max-w-sm rounded overflow-hidden shadow-lg'>
+      <div className='max-w-sm rounded-2x1 overflow-hidden shadow-lg'>
         <img
           src={restaurant?.image || tripadvisorImg}
           className='w-full cursor-pointer'
