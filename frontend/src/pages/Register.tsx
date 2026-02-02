@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
 import { useLoggedIn } from '../hooks/useLoggedIn';
 
- const Login = () => {
+const Register = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -15,6 +15,11 @@ import { useLoggedIn } from '../hooks/useLoggedIn';
 
     if (!username) {
       setError('Provide Username!');
+      return;
+    }
+
+    if (!email) {
+      setError('Provide Email!');
       return;
     }
 
@@ -32,7 +37,7 @@ import { useLoggedIn } from '../hooks/useLoggedIn';
     <div className='flex justify-center items-center h-screen bg-green-500'>
       <div className='w-96 p-6 shadow-lg bg-white rounded-md'>
         <h1 className='text-3xl block text-center font-semibold'>
-          <i className='fa-solid fa-user'></i> Login
+          <i className='fa-solid fa-user'></i> Register
         </h1>
         <hr className='mt-3' />
         <div className='mt-3'>
@@ -46,6 +51,16 @@ import { useLoggedIn } from '../hooks/useLoggedIn';
           />
         </div>
         <div className='mt-3'>
+          <label className='block text-base mb-2'>Email</label>
+          <input
+            type='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className='border w-full rounded-md text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600'
+            placeholder='Enter Email...'
+          />
+        </div>
+        <div className='mt-3'>
           <label className='block text-base mb-2'>Password</label>
           <input
             type='password'
@@ -56,25 +71,18 @@ import { useLoggedIn } from '../hooks/useLoggedIn';
           />
         </div>
 
-        <div className='mt-3 flex justify-end items-center'>
-          <div>
-            <a href='#' className='text-green-500 font-semibold'>
-              Forgot Password?
-            </a>
-          </div>
-        </div>
         <div className='mt-5'>
           <button
             type='button'
             onClick={handleLogin}
             className='border-2 border-green-500 bg-green-500 text-white py-1 w-full rounded-md hover:bg-transparent hover:text-green-500 font-semibold'
           >
-            Login
+            Register
           </button>
         </div>
         <div className='flex justify-center mt-2'>
-          <Link to='/register' className='text-green-500 font-semibold'>
-            Don't have an account? Register here
+          <Link to='/login' className='text-green-500 font-semibold'>
+            Already have an account? Login here
           </Link>
         </div>
 
@@ -86,6 +94,6 @@ import { useLoggedIn } from '../hooks/useLoggedIn';
       </div>
     </div>
   );
-  };
-  
-  export default Login;
+};
+
+export default Register;

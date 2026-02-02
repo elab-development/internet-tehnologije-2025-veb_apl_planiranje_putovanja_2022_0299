@@ -52,7 +52,7 @@ const RestaurantList = () => {
           ))}
   </div>
 
-{searchedRestaurants && (
+{searchedRestaurants.length > 0 &&(
   <div className='flex items-center justify-center gap-5 my-5'>
     {[...Array(totalPages)].map((e, idx) => (
       <div

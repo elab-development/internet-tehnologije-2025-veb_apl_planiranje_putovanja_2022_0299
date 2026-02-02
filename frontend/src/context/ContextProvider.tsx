@@ -15,6 +15,8 @@ interface GlobalContextProps {
   setSearchedRestaurants: React.Dispatch<
     React.SetStateAction<SearchRestaurant[]>
   >;
+  loggedIn: boolean;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
@@ -29,6 +31,7 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({
    const [searchedRestaurants, setSearchedRestaurants] = useState<
   SearchRestaurant[]
 >([]);
+const [loggedIn, setLoggedIn] = useState(false);
 
 
   return (
@@ -44,6 +47,8 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({
         setSearchedHotels,
         searchedRestaurants,
         setSearchedRestaurants,
+        loggedIn,
+        setLoggedIn,
       }}
     >
       {children}

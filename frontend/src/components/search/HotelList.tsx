@@ -51,7 +51,7 @@ const HotelList = () => {
             <HotelCard key={idx} hotel={hotel} />
         ))}
       </div>
-       {searchedHotels && (
+       {searchedHotels.length > 0 && (
         <div className='flex items-center justify-center gap-5 my-5'>
           {[...Array(totalPages)].map((e, idx) => (
             <div

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import tripadvisorImg from '../assets/tripadvisor.jpg';
+import tripadvisorImg from '../assets/tripadvisor.png';
 import { getHotelDetails } from '../utils/hotelsApi';
 import { HotelDetails } from '../models/Hotels';
 import { useLoading } from '../hooks/useLoading';
@@ -49,7 +49,7 @@ const Hotel = () => {
 
   if (loading) {
     return (
-      <div className='flex justify-center mt-20'>
+      <div className='flex justify-center mt-24'>
         <Loader />
       </div>
     );
@@ -58,11 +58,11 @@ const Hotel = () => {
   return (
     <div>
       {!hotel && (
-        <h1 className='font-extrabold text-center text-5xl mt-10'>
+        <h1 className='font-extrabold text-center text-5xl mt-24'>
           No hotel data! Check you API!
         </h1>
       )}
-      <h1 className='font-extrabold text-center text-5xl mt-10'>
+      <h1 className='font-extrabold text-center text-5xl mt-24'>
         {hotel?.name}
       </h1>
       <div className='grid sm:grid-cols-1 md:grid-cols-2 mt-10'>

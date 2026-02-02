@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.navbar {
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  background-color: #fff;
+  width: 100vw;
+}
 
 .activefilter {
   border: 2px solid #1e293b;
