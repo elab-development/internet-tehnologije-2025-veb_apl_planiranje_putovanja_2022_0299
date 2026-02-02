@@ -80,7 +80,7 @@ const MenuBar = () => {
   return (
     <>
      <h1 className='font-extrabold text-center text-5xl mt-24'>Where to?</h1>
-      <div className='flex justify-center p-10 gap-10'>
+      <div className='flex justify-center py-10 gap-10'>
         <FilterItem name='hotels' icon={<FaHotel className='w-6 h-6' />} />
         <FilterItem
           name='restaurants'
