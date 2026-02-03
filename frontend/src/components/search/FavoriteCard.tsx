@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa';
 import { MdReviews } from 'react-icons/md';
 import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 
-import tripadvisorImg from '../../assets/tripadvisor.jpg';
+import tripadvisorImg from '../../assets/tripadvisor.png';
 import { Favorite } from '../../models/Favorites';
 
 interface FavoriteCardProps {
