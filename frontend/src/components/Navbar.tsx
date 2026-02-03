@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo2.svg';
 import { useLoggedIn } from '../hooks/useLoggedIn';
 import { useEffect, useState } from 'react';
+import tripadvisorLogo from '../assets/tripadvisor.png';
+
 
 const Navbar = () => {
   const [user, setUser] = useState('');
@@ -16,10 +18,16 @@ const Navbar = () => {
     }
   }, [loggedIn]);
 
+  <div className="flex items-center gap-2">
+  <img src={tripadvisorLogo} alt="Tripadvisor" className="h-8 w-auto" />
+  <span className="font-bold text-xl">Tripadvisor</span>
+</div>
+
   return (
      <div className='flex py-4 sm:pl-20 sm:justify-between items-center navbar flex-col sm:flex-row'>
       <Link to={'/'} className='flex items-center gap-2'>
-        <img src={logo} className='w-10 h-10 bg-green-400 rounded-full' />
+        <img src={tripadvisorLogo} alt="Tripadvisor" className="h-8 w-auto object-contain" />
+        //<img src={logo} className='w-10 h-10 bg-green-400 rounded-full' />
         <h1 className='font-bold text-2xl'>Tripadvisor</h1>
       </Link>
       <div className='flex justify-end gap-10 sm:mr-20'>
