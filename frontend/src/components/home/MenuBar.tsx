@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaHotel } from 'react-icons/fa';
+import { FaHotel, FaHeart } from 'react-icons/fa';
 import { MdRestaurantMenu } from 'react-icons/md';
 import FilterItem from './FilterItem';
 import { useSearchTerm } from '../../hooks/useSearchTerm.hook';
@@ -80,12 +80,13 @@ const MenuBar = () => {
   return (
     <>
      <h1 className='font-extrabold text-center text-5xl mt-24'>Where to?</h1>
-      <div className='flex justify-center py-10 gap-10'>
+      <div className='flex justify-center py-10 gap-10 flex-wrap'>
         <FilterItem name='hotels' icon={<FaHotel className='w-6 h-6' />} />
         <FilterItem
           name='restaurants'
           icon={<MdRestaurantMenu className='w-6 h-6' />}
         />
+        <FilterItem name='favorites' icon={<FaHeart className='w-6 h-6' />} />
       </div>
       <div className='flex justify-center items-center'>
         <input

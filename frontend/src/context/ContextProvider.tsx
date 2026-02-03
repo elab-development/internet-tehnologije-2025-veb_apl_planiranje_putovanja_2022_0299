@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from 'react';
 import { SearchHotel } from '../models/Hotels';
 import { SearchRestaurant } from '../models/Restaurant';
+import { Favorite } from '../models/Favorites';
 
 interface GlobalContextProps {
   searchTerm: string;
@@ -17,6 +18,8 @@ interface GlobalContextProps {
   >;
   loggedIn: boolean;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  favorites: Favorite[];
+  setFavorites: React.Dispatch<React.SetStateAction<Favorite[]>>;
 }
 
 const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
@@ -31,6 +34,7 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({
    const [searchedRestaurants, setSearchedRestaurants] = useState<
   SearchRestaurant[]
 >([]);
+const [favorites, setFavorites] = useState<Favorite[]>([]); 
 const [loggedIn, setLoggedIn] = useState(false);
 
 
@@ -49,6 +53,8 @@ const [loggedIn, setLoggedIn] = useState(false);
         setSearchedRestaurants,
         loggedIn,
         setLoggedIn,
+        favorites,
+        setFavorites,
       }}
     >
       {children}
