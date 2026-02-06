@@ -105,6 +105,7 @@ class DestinacijaController extends Controller
      */
     public function show(Destinacija $destination)
     {
+        $destination->load(['mesta', 'aktivnosti']);
         $destination->loadCount(['mesta', 'aktivnosti']);
 
         return response()->json([

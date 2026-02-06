@@ -1,12 +1,15 @@
-@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .navbar {
-  position: absolute;
+  position: sticky;
   top: 0;
-  left: 2.5%;
+
   z-index: 999;
-  background-color: #fff;
-  width: 95vw;
+  background-color: #ffffff;
+  width: 100%;
 }
 
 .activefilter {

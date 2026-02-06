@@ -25,9 +25,10 @@ const Navbar = () => {
 
   return (
      <div className='flex py-4 sm:pl-20 sm:justify-between items-center navbar flex-col sm:flex-row'>
-      <Link to={'/'} className='flex items-center gap-2'>
-        <img src={tripadvisorLogo} alt="Tripadvisor" className="h-8 w-auto object-contain" />
-        //<img src={logo} className='w-10 h-10 bg-green-400 rounded-full' />
+      <Link to={'/'} className='flex items-center gap-3'>
+        <img src={tripadvisorLogo} 
+         alt="Tripadvisor"
+          className="h-8 w-auto object-contain" />
         <h1 className='font-bold text-2xl'>Tripadvisor</h1>
       </Link>
       <div className='flex justify-end gap-10 sm:mr-20'>

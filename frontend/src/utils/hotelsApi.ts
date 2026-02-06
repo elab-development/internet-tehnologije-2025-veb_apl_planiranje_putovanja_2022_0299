@@ -1,43 +1,16 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 
-export const searchHotels = async (query: string) => {
-  const options: AxiosRequestConfig = {
-    method: 'GET',
-    url: 'https://tripadvisor-scraper.p.rapidapi.com/hotels/list',
-    params: {
-      query: query,
-      page: '1',
-    },
-    headers: {
-      'x-rapidapi-key': '8e80b71190msh6766b31f564c0d4p1083c3jsnc2d0c302de09',
-      'x-rapidapi-host': 'tripadvisor-scraper.p.rapidapi.com',
-    },
-  };
+const BASE_URL = 'http://localhost:8000/api';
 
-  try {
-    const response: AxiosResponse<any> = await axios.request(options);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+export const searchPlacesInDb = async (query: string) => {
+    const res = await axios.get(`${BASE_URL}/search`, { params: { query } });
+    return res.data;
+};
 
-  export const getHotelDetails = async (id: string) => {
-  const options: AxiosRequestConfig = {
-    method: 'GET',
-    url: 'https://tripadvisor-scraper.p.rapidapi.com/hotels/detail',
-    params: { id: id },
-    headers: {
-      'x-rapidapi-key': '8e80b71190msh6766b31f564c0d4p1083c3jsnc2d0c302de09',
-      'x-rapidapi-host': 'tripadvisor-scraper.p.rapidapi.com',
-    },
-  };
-  try {
-    const response: AxiosResponse<any> = await axios.request(options);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+export const importFromApi = async (query: string) => {
+    return await axios.post(`${BASE_URL}/import/destinations`, { query });
+};
 
-
+export const getHotelDetails = async (id: number) => {
+    return await axios.get(`${BASE_URL}/places/${id}`);
+};

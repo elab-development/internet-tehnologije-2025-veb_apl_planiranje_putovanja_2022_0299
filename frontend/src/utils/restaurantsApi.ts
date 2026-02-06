@@ -1,42 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 
-export const searchRestaurants = async (query: string) => {
-  const options: AxiosRequestConfig = {
-    method: 'GET',
-    url: 'https://tripadvisor-scraper.p.rapidapi.com/restaurants/list',
-    params: {
-      query: query,
-      page: '1',
-    },
-    headers: {
-      'x-rapidapi-key': '8e80b71190msh6766b31f564c0d4p1083c3jsnc2d0c302de09',
-      'x-rapidapi-host': 'tripadvisor-scraper.p.rapidapi.com',
-    },
-  };
-
-  try {
-    const response: AxiosResponse<any> = await axios.request(options);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
+const BASE_URL = 'http://localhost:8000/api';
 
 export const getRestaurantsDetails = async (id: string) => {
-  const options: AxiosRequestConfig = {
-    method: 'GET',
-    url: 'https://tripadvisor-scraper.p.rapidapi.com/restaurants/detail',
-    params: { id: id },
-    headers: {
-      'x-rapidapi-key': '8e80b71190msh6766b31f564c0d4p1083c3jsnc2d0c302de09',
-      'x-rapidapi-host': 'tripadvisor-scraper.p.rapidapi.com',
-    },
-  };
-  
-  try {
-    const response: AxiosResponse<any> = await axios.request(options);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(`${BASE_URL}/places/${id}`);
+  return response.data; 
 };

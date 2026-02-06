@@ -2,48 +2,47 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import tripadvisorImg from '../assets/tripadvisor.png';
-import { getHotelDetails } from '../utils/hotelsApi';
-import { HotelDetails } from '../models/Hotels';
 import { useLoading } from '../hooks/useLoading';
 import Loader from '../components/Loader';
+import { getRestaurantsDetails } from '../utils/restaurantsApi';
+import { RestaurantDetails } from '../models/Restaurant';
 
-const Hotel = () => {
-    return <div></div>;
-  const [hotel, setHotel] = useState<HotelDetails | null>(null);
+const Restaurant = () => {
+    const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const { loading, setLoading } = useLoading();
   const { id } = useParams();
 
   useEffect(() => {
-    const fetchHotelDetails = async (idStr: string) => {
+    const fetchRestaurantDetails = async (idStr: string) => {
       setLoading(true);
       try {
-        const hotelRes = await getHotelDetails(idStr);
-        if (hotelRes) {
-          setHotel(
-            new HotelDetails(
-              hotelRes.id,
-              hotelRes.name,
-              hotelRes.rating,
-              hotelRes.reviews,
-              hotelRes.featured_image,
-              hotelRes.email,
-              hotelRes.link,
-              hotelRes.website,
-              hotelRes.address,
-              hotelRes.phone
+        const restaurantRes = await getRestaurantsDetails(idStr);
+        if (restaurantRes) {
+          setRestaurant(
+            new RestaurantDetails(
+              restaurantRes.id,
+              restaurantRes.name,
+              restaurantRes.rating,
+              restaurantRes.reviews,
+              restaurantRes.price_range,
+              restaurantRes.featured_image,
+              restaurantRes.link,
+              restaurantRes.address,
+              restaurantRes.phone,
+              restaurantRes.menu_link
             )
           );
         }
       } catch (error) {
         console.error(error);
-        setHotel(null);
+        setRestaurant(null);
       }
 
       setLoading(false);
     };
 
     if (id?.toString()) {
-      fetchHotelDetails(id?.toString());
+      fetchRestaurantDetails(id?.toString());
     }
   }, [id]);
 
@@ -57,41 +56,43 @@ const Hotel = () => {
 
   return (
     <div>
-      {!hotel && (
+      {!restaurant && (
         <h1 className='font-extrabold text-center text-5xl mt-24'>
-          No hotel data! Check you API!
+          No restaurant data! Check you API!
         </h1>
       )}
       <h1 className='font-extrabold text-center text-5xl mt-24'>
-        {hotel?.name}
+        {restaurant?.name}
       </h1>
       <div className='grid sm:grid-cols-1 md:grid-cols-2 mt-10'>
         <div className='flex items-center justify-center p-2'>
           <img
-            src={hotel?.image || tripadvisorImg}
-            alt={'hotel' + hotel?.name}
+            src={restaurant?.image || tripadvisorImg}
+            alt={'restaurant' + restaurant?.name}
             className='rounded-md'
           />
         </div>
         <div className='p-2'>
           <p className='text-2xl py-2'>
             <span className='font-bold'>Address:</span>{' '}
-            {hotel?.address || 'N/A'}
+            {restaurant?.address || 'N/A'}
           </p>
           <p className='text-2xl  py-2'>
-            <span className='font-bold'>Phone:</span> {hotel?.phone || 'N/A'}
+            <span className='font-bold'>Phone:</span>{' '}
+            {restaurant?.phone || 'N/A'}
           </p>
           <p className='text-2xl  py-2'>
-            <span className='font-bold'>Rating:</span> {hotel?.rating || 'N/A'}
+            <span className='font-bold'>Rating:</span>{' '}
+            {restaurant?.rating || 'N/A'}
           </p>
           <p className='text-2xl  py-2'>
             <span className='font-bold'>Reviews:</span>{' '}
-            {hotel?.reviews || 'N/A'}
+            {restaurant?.reviews || 'N/A'}
           </p>
           <p className='text-2xl  py-2'>
             <span className='font-bold'>Link:</span>{' '}
-            {hotel?.link ? (
-              <a href={hotel?.link} rel='norefferer' target='_blank'>
+            {restaurant?.link ? (
+              <a href={restaurant?.link} rel='norefferer' target='_blank'>
                 TripAdvisor
               </a>
             ) : (
@@ -99,19 +100,23 @@ const Hotel = () => {
             )}
           </p>
           <p className='text-2xl  py-2'>
-            <span className='font-bold'>Website:</span>{' '}
-            {hotel?.website ? (
-              <a href={hotel?.website} rel='norefferer' target='_blank'>
-                {hotel?.name}
+            <span className='font-bold'>Menu:</span>{' '}
+            {restaurant?.menu ? (
+              <a href={restaurant?.menu} rel='norefferer' target='_blank'>
+                {restaurant?.name}
               </a>
             ) : (
               'N/A'
             )}
           </p>
+          <p className='text-2xl  py-2'>
+            <span className='font-bold'>Price:</span>{' '}
+            {restaurant?.priceRange || '$ - $$'}
+          </p>
         </div>
       </div>
     </div>
   );
-  };
+};
 
-  export default Hotel;
+export default Restaurant;

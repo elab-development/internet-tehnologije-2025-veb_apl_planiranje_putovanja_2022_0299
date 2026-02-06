@@ -176,4 +176,27 @@ class MestoController extends Controller
 
         return response()->json(['message' => 'Place deleted successfully']);       
     }
+
+     public function search(Request $request)
+    {
+        $query = Mesto::query();
+
+    
+        if ($request->filled('destination')) {
+        $query->whereHas('destinacija', function ($q) use ($request) {
+            $q->where('ime', 'LIKE', '%' . $request->destination . '%');
+        });
+    
+
+    
+    if ($request->filled('type')) {
+        $query->where('tip', $request->type);
+    }
+
+    return response()->json(
+        $query->with('destinacija')->get()
+         );
+        }}
 }
+    
+    
