@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up(): void
     {
         Schema::create('mesta', function (Blueprint $table) {       
@@ -20,13 +18,16 @@ return new class extends Migration
             $table->string('adresa')->nullable();
             $table->decimal('geografska_sirina', 10, 7)->nullable();
             $table->decimal('geografska_duzina', 10, 7)->nullable();
+            
+            $table->string('slika', 500)->nullable();
+
+            $table->foreignId('destinacija_id')->constrained()->onDelete('cascade');
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('mesta');

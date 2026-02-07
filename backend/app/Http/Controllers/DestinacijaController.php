@@ -11,9 +11,6 @@ use App\Http\Resources\DestinacijaResource;
 
 class DestinacijaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $q = trim((string) $request->query('q', ''));
@@ -59,17 +56,11 @@ class DestinacijaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
@@ -100,9 +91,6 @@ class DestinacijaController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Destinacija $destination)
     {
         $destination->load(['mesta', 'aktivnosti']);
@@ -114,17 +102,11 @@ class DestinacijaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Destinacija $destination)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Destinacija $destination)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
@@ -175,9 +157,6 @@ class DestinacijaController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Destinacija $destination)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {

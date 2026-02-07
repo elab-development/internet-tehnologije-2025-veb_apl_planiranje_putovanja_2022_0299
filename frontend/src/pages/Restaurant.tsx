@@ -25,7 +25,7 @@ const Restaurant = () => {
               restaurantRes.rating,
               restaurantRes.reviews,
               restaurantRes.price_range,
-              restaurantRes.featured_image,
+              restaurantRes.slika, // OVO JE DODATO
               restaurantRes.link,
               restaurantRes.address,
               restaurantRes.phone,

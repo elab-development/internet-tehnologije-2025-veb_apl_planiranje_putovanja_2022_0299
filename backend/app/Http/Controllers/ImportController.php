@@ -39,6 +39,7 @@ class ImportController extends Controller
     if ($ime) {
         $lat = $r['latitude'] ?? $r['lat'] ?? $r['location']['latitude'] ?? null;
         $lng = $r['longitude'] ?? $r['lng'] ?? $r['location']['longitude'] ?? null;
+        $slika = $r['heroImage'] ?? $r['image'] ?? $r['photo']['url'] ?? $r['thumbnail'] ?? null;
 
         $ocena = $r['rating'] ?? $r['average_rating'] ?? 0;
         $recenzije = $r['reviews'] ?? $r['num_reviews'] ?? 0;
@@ -53,6 +54,7 @@ class ImportController extends Controller
                 'broj_recenzija' => (int)$recenzije,
                 'geografska_sirina' => $lat,
                 'geografska_duzina' => $lng,
+                'slika' => $slika,
             ]
         );
         $uvezenoRestorana++;
@@ -70,6 +72,7 @@ class ImportController extends Controller
         foreach ($hoteli as $h) {
             $imeHotela = $h['title'] ?? $h['name'] ?? null;
             if ($imeHotela) {
+                $slikaHotel = $h['heroImage'] ?? $h['image'] ?? $h['mainPhoto'] ?? $h['photo']['url'] ?? null;
                 $destinacija->mesta()->updateOrCreate(
                     ['ime' => $imeHotela],
                     [
@@ -78,6 +81,7 @@ class ImportController extends Controller
                         'slug' => Str::slug($imeHotela . '-' . rand(100, 999)),
                         'prosecna_ocena' => (float) ($h['rating'] ?? 0),
                         'broj_recenzija' => (int) ($h['reviews'] ?? 0),
+                        'slika' => $slikaHotel,
                     ]
                 );
                 $uvezenoHotela++;

@@ -4,47 +4,49 @@ import { useParams } from 'react-router-dom';
 import tripadvisorImg from '../assets/tripadvisor.png';
 import { useLoading } from '../hooks/useLoading';
 import Loader from '../components/Loader';
-import { getRestaurantsDetails } from '../utils/restaurantsApi';
-import { RestaurantDetails } from '../models/Restaurant';
+import axios from 'axios'; // Koristimo direktno ili tvoj utils
+import { HotelDetails } from '../models/Hotels';
 
-const Restaurant = () => {
-    const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
+const Hotel = () => {
+  const [hotel, setHotel] = useState<HotelDetails | null>(null);
   const { loading, setLoading } = useLoading();
   const { id } = useParams();
 
   useEffect(() => {
-    const fetchRestaurantDetails = async (idStr: string) => {
+    const fetchHotelDetails = async (idStr: string) => {
       setLoading(true);
       try {
-        const restaurantRes = await getRestaurantsDetails(idStr);
-        if (restaurantRes) {
-          setRestaurant(
-            new RestaurantDetails(
-              restaurantRes.id,
-              restaurantRes.name,
-              restaurantRes.rating,
-              restaurantRes.reviews,
-              restaurantRes.price_range,
-              restaurantRes.featured_image,
-              restaurantRes.link,
-              restaurantRes.address,
-              restaurantRes.phone,
-              restaurantRes.menu_link
+        // Pozivamo tvoj API (možeš koristiti i funkciju iz utils-a)
+        const response = await axios.get(`http://localhost:8000/api/places/${idStr}`);
+        const hotelRes = response.data;
+
+        if (hotelRes) {
+          setHotel(
+            new HotelDetails(
+              hotelRes.id,
+              hotelRes.name || hotelRes.ime,
+              hotelRes.rating,
+              hotelRes.reviews,
+              hotelRes.slika, // SLIKA JE OVDE 5. ARGUMENT (kao u tvom HotelDetails modelu)
+              hotelRes.email,
+              hotelRes.link,
+              hotelRes.website,
+              hotelRes.address || hotelRes.adresa,
+              hotelRes.phone
             )
           );
         }
       } catch (error) {
         console.error(error);
-        setRestaurant(null);
+        setHotel(null);
       }
-
       setLoading(false);
     };
 
-    if (id?.toString()) {
-      fetchRestaurantDetails(id?.toString());
+    if (id) {
+      fetchHotelDetails(id);
     }
-  }, [id]);
+  }, [id, setLoading]);
 
   if (loading) {
     return (
@@ -56,62 +58,54 @@ const Restaurant = () => {
 
   return (
     <div>
-      {!restaurant && (
+      {!hotel && (
         <h1 className='font-extrabold text-center text-5xl mt-24'>
-          No restaurant data! Check you API!
+          No hotel data! Check your API!
         </h1>
       )}
+      
       <h1 className='font-extrabold text-center text-5xl mt-24'>
-        {restaurant?.name}
+        {hotel?.name}
       </h1>
+
       <div className='grid sm:grid-cols-1 md:grid-cols-2 mt-10'>
         <div className='flex items-center justify-center p-2'>
+          {/* PRIKAZ SLIKE */}
           <img
-            src={restaurant?.image || tripadvisorImg}
-            alt={'restaurant' + restaurant?.name}
-            className='rounded-md'
+            src={hotel?.image || tripadvisorImg}
+            alt={'hotel ' + hotel?.name}
+            className='rounded-md w-full max-w-2xl object-cover'
           />
         </div>
+
         <div className='p-2'>
           <p className='text-2xl py-2'>
-            <span className='font-bold'>Address:</span>{' '}
-            {restaurant?.address || 'N/A'}
+            <span className='font-bold'>Address:</span> {hotel?.address || 'N/A'}
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Phone:</span>{' '}
-            {restaurant?.phone || 'N/A'}
+          <p className='text-2xl py-2'>
+            <span className='font-bold'>Rating:</span> {hotel?.rating || 'N/A'} 
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Rating:</span>{' '}
-            {restaurant?.rating || 'N/A'}
+          <p className='text-2xl py-2'>
+            <span className='font-bold'>Reviews:</span> {hotel?.reviews || '0'}
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Reviews:</span>{' '}
-            {restaurant?.reviews || 'N/A'}
+          <p className='text-2xl py-2'>
+            <span className='font-bold'>Phone:</span> {hotel?.phone || 'N/A'}
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Link:</span>{' '}
-            {restaurant?.link ? (
-              <a href={restaurant?.link} rel='norefferer' target='_blank'>
-                TripAdvisor
+          <p className='text-2xl py-2'>
+            <span className='font-bold'>Website:</span>{' '}
+            {hotel?.website ? (
+              <a href={hotel.website} target='_blank' rel='noreferrer' className="text-blue-500 underline">
+                Official Website
               </a>
-            ) : (
-              'N/A'
-            )}
+            ) : 'N/A'}
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Menu:</span>{' '}
-            {restaurant?.menu ? (
-              <a href={restaurant?.menu} rel='norefferer' target='_blank'>
-                {restaurant?.name}
+          <p className='text-2xl py-2'>
+            <span className='font-bold'>TripAdvisor:</span>{' '}
+            {hotel?.link ? (
+              <a href={hotel.link} target='_blank' rel='noreferrer' className="text-green-600 underline">
+                View on TripAdvisor
               </a>
-            ) : (
-              'N/A'
-            )}
-          </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Price:</span>{' '}
-            {restaurant?.priceRange || '$ - $$'}
+            ) : 'N/A'}
           </p>
         </div>
       </div>
@@ -119,4 +113,4 @@ const Restaurant = () => {
   );
 };
 
-export default Restaurant;
+export default Hotel;

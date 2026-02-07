@@ -12,9 +12,7 @@ use App\Http\Resources\MestoResource;
 
 class MestoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index(Request $request)
     {
         $validated = $request->validate([
@@ -47,17 +45,13 @@ class MestoController extends Controller
         return MestoResource::collection($places);
         }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
         if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'moderator'], true)) {
@@ -92,9 +86,6 @@ class MestoController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Mesto $place)
     {
         $place->load(['destinacija'])->loadCount('recenzije');
@@ -105,17 +96,11 @@ class MestoController extends Controller
     ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Mesto $place)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Mesto $place)
     {
         if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'moderator'], true)) {
@@ -163,9 +148,6 @@ class MestoController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Mesto $place)
     {
         if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'moderator'], true)) {
