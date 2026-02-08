@@ -17,7 +17,7 @@ class Aktivnost extends Model
         'naziv',
         'cena',
         'trajanje',
-        'opis'
+        'slika',
     ];
 
     public function destinacija(): BelongsTo

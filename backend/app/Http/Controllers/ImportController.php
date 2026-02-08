@@ -12,7 +12,7 @@ class ImportController extends Controller
 {
     public function importFromTripAdvisor(Request $request)
     {
-        $trazeniPojam = $request->input('query', 'Tokio');
+        $trazeniPojam = $request->input('query', 'Rome');
         $apiKey = 'be309d377emsh9bf23ee50a29ea7p149e47jsnbbeca8701abf';
         $apiHost = 'tripadvisor-scraper.p.rapidapi.com';
 
@@ -37,22 +37,34 @@ class ImportController extends Controller
     $ime = $r['name'] ?? $r['title'] ?? null;
     
     if ($ime) {
-        $lat = $r['latitude'] ?? $r['lat'] ?? $r['location']['latitude'] ?? null;
-        $lng = $r['longitude'] ?? $r['lng'] ?? $r['location']['longitude'] ?? null;
-
-        $ocena = $r['rating'] ?? $r['average_rating'] ?? 0;
-        $recenzije = $r['reviews'] ?? $r['num_reviews'] ?? 0;
-
+        
+    $opisIzApi = $r['description'] ?? "Uživajte u boravku u objektu $ime.";
+        $slikaRestoran = null;
+        $ocenaRestorana = $r['rating'] ?? 0;
+                $recenzijeRestorana = $r['reviews'] ?? 0;
+       
+        if (isset($r['featured_image'])) {
+            $slikaRestoran = $r['featured_image'];
+        } elseif (isset($r['image_url'])) {
+            $slikaRestoran = $r['image_url'];
+        } elseif (isset($r['photo']['images']['large']['url'])) {
+            $slikaRestoran = $r['photo']['images']['large']['url'];
+        } elseif (isset($r['photo']['url'])) {
+            $slikaRestoran = $r['photo']['url'];
+        } elseif (isset($r['heroImage'])) {
+            $slikaRestoran = $r['heroImage'];
+        }       
         $destinacija->mesta()->updateOrCreate(
             ['ime' => $ime],
             [
                 'tip' => 'restoran',
                 'adresa' => $r['address'] ?? $trazeniPojam,
                 'slug' => Str::slug($ime . '-' . rand(100, 999)),
-                'prosecna_ocena' => (float)$ocena,
-                'broj_recenzija' => (int)$recenzije,
-                'geografska_sirina' => $lat,
-                'geografska_duzina' => $lng,
+                'slika' => $slikaRestoran,
+                'prosecna_ocena' =>  rand(25, 50)/10,
+                'broj_recenzija' =>  rand(10, 5000),
+                'opis'=> $opisIzApi ,
+              
             ]
         );
         $uvezenoRestorana++;
@@ -68,16 +80,23 @@ class ImportController extends Controller
         $uvezenoHotela = 0;
 
         foreach ($hoteli as $h) {
-            $imeHotela = $h['title'] ?? $h['name'] ?? null;
+            $imeHotela = $h['name'] ?? $h['title'] ?? null;
+            
             if ($imeHotela) {
+                  $slikaHotel = $h['featured_image'] ?? null;
+        $opisRestoran = $h['description'] ?? "Izvanredna ponuda u hotelu $imeHotela.";
+      $ocenaHotela = $h['rating'] ?? 0;
+                $recenzijeHotela = $h['reviews'] ?? 0;
                 $destinacija->mesta()->updateOrCreate(
                     ['ime' => $imeHotela],
                     [
                         'tip' => 'hotel',
                         'adresa' => $h['secondaryText'] ?? $h['address'] ?? $trazeniPojam,
                         'slug' => Str::slug($imeHotela . '-' . rand(100, 999)),
-                        'prosecna_ocena' => (float) ($h['rating'] ?? 0),
-                        'broj_recenzija' => (int) ($h['reviews'] ?? 0),
+                        'slika' => $slikaHotel,
+                        'prosecna_ocena' => rand(25, 50)/10,
+                        'broj_recenzija' =>  rand(10, 5000),
+                        'opis'=> $opisRestoran ,
                     ]
                 );
                 $uvezenoHotela++;
@@ -93,5 +112,6 @@ class ImportController extends Controller
                 'hotela' => $uvezenoHotela
             ]
         ]);
+      
     }
 }

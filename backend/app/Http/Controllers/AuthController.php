@@ -25,11 +25,13 @@ class AuthController extends Controller
         $user = User::create([
             'ime' => $request->ime,
             'email' => $request->email,
+            'role' => 'user' ,
             'password' => Hash::make($request->password)
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
+            'user' => $user, 
             'data' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer'
@@ -37,21 +39,25 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Wrong credentials'], 401);
-        }
-
-        $user = User::where('email', $request['email'])->firstOrFail();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => $user->ime . ' logged in',
-            'access_token' => $token,
-            'token_type' => 'Bearer'
-        ]);
+{
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Wrong credentials'], 401);
     }
+
+    $user = User::where('email', $request['email'])->firstOrFail();
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => $user->ime . ' logged in',
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+        'user' => [
+            'ime' => $user->ime,
+            'role' => $user->role,
+            'email' => $user->email
+        ]
+    ]);
+}
 
     public function logout(Request $request)
     {
@@ -61,4 +67,33 @@ class AuthController extends Controller
             'message' => 'You have successfully logged out.'
         ];
     }
+
+
+
+public function index()
+{
+    if (!Auth::user() || !Auth::user()->isAdmin()) {
+        return response()->json(['message' => 'Nemaš ovlašćenje za ovaj prikaz.'], 403);
+    }
+
+    $users = User::all();
+    return response()->json($users);
+}
+
+
+public function destroy($id)
+{
+    if (!Auth::user()->isAdmin()) {
+        return response()->json(['message' => 'Nemaš ovlašćenje.'], 403);
+    }
+
+    $user = User::findOrFail($id);
+    
+    if ($user->id === Auth::id()) {
+        return response()->json(['message' => 'Ne možeš obrisati svoj nalog.'], 400);
+    }
+
+    $user->delete();
+    return response()->json(['message' => 'Korisnik uspešno obrisan.']);
+}
 }

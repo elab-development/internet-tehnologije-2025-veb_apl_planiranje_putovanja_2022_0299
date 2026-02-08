@@ -6,17 +6,19 @@ import tripadvisorLogo from '../assets/tripadvisor.png';
 
 
 const Navbar = () => {
-  const [user, setUser] = useState('');
+const [user, setUser] = useState<any>(null);
   const { loggedIn, setLoggedIn } = useLoggedIn();
 
   useEffect(() => {
-    let storage = localStorage.getItem('user');
-    if (storage) {
-      setUser(storage);
-    }else{
-      setUser('');
+  const storage = localStorage.getItem('user');
+  if (storage && storage !== "undefined") {
+    try {
+      setUser(JSON.parse(storage)); 
+    } catch (e) {
+      setUser("");
     }
-  }, [loggedIn]);
+  }
+}, [loggedIn]);
 
   <div className="flex items-center gap-2">
   <img src={tripadvisorLogo} alt="Tripadvisor" className="h-8 w-auto" />
@@ -34,7 +36,10 @@ const Navbar = () => {
       <div className='flex justify-end gap-10 sm:mr-20'>
         {user && (
           <h1 className='font-semibold mt-2'>
-            Welcome, <span className='text-green-500'>{user}</span> !
+              Welcome, <span className='text-green-500'>
+                {/* DODAJ .ime OVDE da bi pisalo samo mina */}
+                {user?.ime || 'User'} 
+              </span> !
           </h1>
         )}
         {loggedIn && (
@@ -54,3 +59,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

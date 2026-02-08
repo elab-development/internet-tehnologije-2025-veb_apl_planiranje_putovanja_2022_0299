@@ -19,8 +19,7 @@ class Mesto extends Model
         'tip',
         'adresa',
         'slug',
-        'geografska_sirina',
-        'geografska_duzina',
+        'slika',
         'prosecna_ocena',
         'broj_recenzija',
     ];

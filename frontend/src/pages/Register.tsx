@@ -56,7 +56,7 @@ const Register = () => {
         <hr className='mt-3' />
         
         <div className='mt-3'>
-          <label className='block text-base mb-2'>Username</label>
+          <label className='block text-base mb-2'>Name</label>
           <input
             type='text'
             value={username}
@@ -65,6 +65,7 @@ const Register = () => {
             placeholder='Enter Username...'
           />
         </div>
+
 
         <div className='mt-3'>
           <label className='block text-base mb-2'>Email</label>

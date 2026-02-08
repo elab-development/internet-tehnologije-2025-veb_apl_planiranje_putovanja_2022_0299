@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('naziv');
             $table->decimal('cena', 10, 2)->nullable();
-            $table->string('trajanje')->nullable();
-            $table->text('opis')->nullable();
-            $table->timestamps();
+            $table->string('trajanje')->nullable();           
+        $table->string('slika', 500)->nullable();
+         $table->timestamps();
+
             
         });
     }

@@ -42,7 +42,6 @@ export interface PriceRange {
     public link: string;
     public website: string;
     public address: string;
-    public phone: string;
   
     constructor(
       id: number,
@@ -54,7 +53,6 @@ export interface PriceRange {
       link: string,
       website: string,
       address: string,
-      phone: string
     ) {
       this.id = id;
       this.name = name;
@@ -65,6 +63,5 @@ export interface PriceRange {
       this.link = link;
       this.website = website;
       this.address = address;
-      this.phone = phone;
     }
   }

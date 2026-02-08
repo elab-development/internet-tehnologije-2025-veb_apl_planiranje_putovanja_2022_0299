@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SearchController;
 
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\ImportAktivnosti;
 
 
 
@@ -45,9 +46,17 @@ Route::get('/places/{place}', [MestoController::class, 'show']);
 
 Route::get('/search', [SearchController::class, 'search']);
 
+Route::get('/aktivnosti/search', [AktivnostController::class, 'search']);
 
 Route::get('/aktivnosti', [AktivnostController::class, 'index']);
 Route::get('/aktivnosti/{aktivnost}', [AktivnostController::class, 'show']);
+
+use App\Http\Controllers\UserController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users', [AuthController::class, 'index']); 
+    Route::delete('/users/{id}', [AuthController::class, 'destroy']);
+});
 
 
 
@@ -59,6 +68,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         'import/destinations',
         [ImportController::class, 'importFromTripAdvisor']
         );
+
+        Route::post('/import-aktivnosti', [ImportAktivnosti::class, 'ImportAktivnosti']);
 
 
         Route::resource('destinations', DestinacijaController::class)

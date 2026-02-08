@@ -110,4 +110,24 @@ class AktivnostController extends Controller
 
         return response()->json(['message' => 'Aktivnost deleted successfully']);
     }
+    public function search(Request $request)
+{
+    // Uzimamo 'query' iz URL-a (npr. 'rome' ili 'belgrade')
+    $searchTerm = $request->query('query');
+
+    if (!$searchTerm) {
+        return response()->json(['count' => 0, 'data' => []]);
+    }
+
+    // Tražimo aktivnosti gde ime destinacije odgovara unetom terminu
+    $aktivnosti = Aktivnost::whereHas('destinacija', function($q) use ($searchTerm) {
+        $q->where('ime', 'LIKE', '%' . $searchTerm . '%');
+    })->with('destinacija')->get();
+
+    // Vraćamo format koji tvoj frontend handleSearch očekuje (res.data)
+    return response()->json([
+        'count' => $aktivnosti->count(),
+        'data' => AktivnostResource::collection($aktivnosti)
+    ]);
+}
 }

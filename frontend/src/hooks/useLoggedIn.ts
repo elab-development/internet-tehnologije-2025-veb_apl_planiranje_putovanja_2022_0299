@@ -6,6 +6,10 @@ export const useLoggedIn = () => {
   if (!context) {
     throw new Error('There is a problem with ContextProvider!');
   }
-  const { loggedIn, setLoggedIn } = context;
-  return { loggedIn, setLoggedIn };
+  return { 
+    loggedIn: context.loggedIn, 
+    setLoggedIn: context.setLoggedIn, 
+    user: context.user, 
+    setUser: context.setUser 
+  };
 };

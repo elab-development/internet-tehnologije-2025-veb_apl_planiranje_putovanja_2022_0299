@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-
+import { useParams, useLocation } from 'react-router-dom';
 import tripadvisorImg from '../assets/tripadvisor.png';
 import { useLoading } from '../hooks/useLoading';
 import Loader from '../components/Loader';
@@ -8,9 +7,13 @@ import { getRestaurantsDetails } from '../utils/restaurantsApi';
 import { RestaurantDetails } from '../models/Restaurant';
 
 const Restaurant = () => {
-    const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
+  const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const { loading, setLoading } = useLoading();
   const { id } = useParams();
+
+  // >>> IZMENA: Hvatanje slike iz state-a <<<
+  const location = useLocation();
+  const imageFromState = location.state?.imageFromList;
 
   useEffect(() => {
     const fetchRestaurantDetails = async (idStr: string) => {
@@ -25,11 +28,10 @@ const Restaurant = () => {
               restaurantRes.rating,
               restaurantRes.reviews,
               restaurantRes.price_range,
-              restaurantRes.featured_image,
+              restaurantRes.slika,
               restaurantRes.link,
               restaurantRes.address,
-              restaurantRes.phone,
-              restaurantRes.menu_link
+            
             )
           );
         }
@@ -44,7 +46,7 @@ const Restaurant = () => {
     if (id?.toString()) {
       fetchRestaurantDetails(id?.toString());
     }
-  }, [id]);
+  }, [id, setLoading]);
 
   if (loading) {
     return (
@@ -53,6 +55,8 @@ const Restaurant = () => {
       </div>
     );
   }
+
+  const finalImage = imageFromState || restaurant?.image || tripadvisorImg;
 
   return (
     <div>
@@ -67,9 +71,10 @@ const Restaurant = () => {
       <div className='grid sm:grid-cols-1 md:grid-cols-2 mt-10'>
         <div className='flex items-center justify-center p-2'>
           <img
-            src={restaurant?.image || tripadvisorImg}
+            // >>> IZMENA: Korišćenje finalImage varijable <<<
+            src={finalImage}
             alt={'restaurant' + restaurant?.name}
-            className='rounded-md'
+            className='rounded-md w-full max-w-2xl object-cover shadow-lg'
           />
         </div>
         <div className='p-2'>
@@ -77,10 +82,7 @@ const Restaurant = () => {
             <span className='font-bold'>Address:</span>{' '}
             {restaurant?.address || 'N/A'}
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Phone:</span>{' '}
-            {restaurant?.phone || 'N/A'}
-          </p>
+         
           <p className='text-2xl  py-2'>
             <span className='font-bold'>Rating:</span>{' '}
             {restaurant?.rating || 'N/A'}
@@ -92,27 +94,15 @@ const Restaurant = () => {
           <p className='text-2xl  py-2'>
             <span className='font-bold'>Link:</span>{' '}
             {restaurant?.link ? (
-              <a href={restaurant?.link} rel='norefferer' target='_blank'>
+              <a href={restaurant?.link} rel='noreferrer' target='_blank' className='text-blue-500 underline'>
                 TripAdvisor
               </a>
             ) : (
               'N/A'
             )}
           </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Menu:</span>{' '}
-            {restaurant?.menu ? (
-              <a href={restaurant?.menu} rel='norefferer' target='_blank'>
-                {restaurant?.name}
-              </a>
-            ) : (
-              'N/A'
-            )}
-          </p>
-          <p className='text-2xl  py-2'>
-            <span className='font-bold'>Price:</span>{' '}
-            {restaurant?.priceRange || '$ - $$'}
-          </p>
+          
+        
         </div>
       </div>
     </div>

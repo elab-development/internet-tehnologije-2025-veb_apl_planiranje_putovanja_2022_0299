@@ -4,35 +4,46 @@ import axios from 'axios';
 import { useLoggedIn } from '../hooks/useLoggedIn';
 
 const Login = () => {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setLoggedIn } = useLoggedIn();
+  
+  const { setLoggedIn, setUser } = useLoggedIn();
 
   const handleLogin = async () => {
     setError('');
 
-    if (!email) { setError('Provide Email!'); return; }
-    if (!password) { setError('Provide Password!'); return; }
+    // Osnovna validacija polja
+    if (!email || !password) { 
+      setError('Please provide both email and password!'); 
+      return; 
+    }
 
     try {
-      
+      // Pozivamo tvoj Laravel backend
       const response = await axios.post('http://localhost:8000/api/login', {
         email: email,
         password: password
       });
 
+      // Provera da li je server vratio token i podatke o korisniku
       if (response.data.access_token) {
-        localStorage.setItem('token', response.data.access_token);
-      //  localStorage.setItem('user', email); 
-      const messageFromServer = response.data.message;
-      const nameOnly = messageFromServer.split(' ')[0]; 
+        // Podaci koje tvoj AuthController sada ispravno šalje
+        const userData = response.data.user; 
 
-      localStorage.setItem('user', nameOnly);
+        // 1. Čuvanje tokena za API autorizaciju
+        localStorage.setItem('token', response.data.access_token);
         
+        // 2. Čuvanje CELOG objekta korisnika kao JSON string-a
+        // Ovo rešava SyntaxError u ContextProvider-u
+        localStorage.setItem('user', JSON.stringify(userData)); 
+        
+        // 3. Ažuriranje globalnog stanja aplikacije
+        setUser(userData); 
         setLoggedIn(true);
+        
+        // Preusmeravanje na početnu stranu gde će se sada videti ime i admin opcije
         navigate('/');
       }
     } catch (err: any) {
@@ -45,59 +56,62 @@ const Login = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center h-screen bg-green-600'>
-      <div className='w-96 p-6 shadow-lg bg-white rounded-md'>
-        <h1 className='text-3xl block text-center font-semibold'>
-          Login
+    <div className='flex flex-col justify-center items-center h-screen bg-green-600 font-sans'>
+      <div className='w-96 p-8 shadow-2xl bg-white rounded-xl'>
+        <h1 className='text-3xl block text-center font-bold text-slate-800'>
+          Tripadvisor
         </h1>
-        <hr className='mt-3' />
+        <p className='text-center text-gray-500 text-sm mt-2'>Sign in to your account</p>
+        <hr className='mt-4 mb-6' />
         
-        <div className='mt-3'>
-          <label className='block text-base mb-2'>Email</label>
-          <input
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className='border w-full rounded-md text-base px-2 py-1 focus:outline-none'
-            placeholder='Enter Email...'
-          />
-        </div>
-        
-        <div className='mt-3'>
-          <label className='block text-base mb-2'>Password</label>
-          <input
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className='border rounded-md w-full text-base px-2 py-1 focus:outline-none'
-            placeholder='Enter Password...'
-          />
+        <div className='space-y-4'>
+          <div>
+            <label className='block text-sm font-semibold mb-1 text-slate-700'>Email Address</label>
+            <input
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className='border border-gray-300 w-full rounded-lg text-base px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all'
+              placeholder='example@mail.com'
+            />
+          </div>
+          
+          <div>
+            <label className='block text-sm font-semibold mb-1 text-slate-700'>Password</label>
+            <input
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='border border-gray-300 rounded-lg w-full text-base px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all'
+              placeholder='••••••••'
+            />
+          </div>
         </div>
 
-        <div className='mt-3 flex justify-end items-center'>
-          <a href='#' className='text-sm text-gray-500 hover:text-green-600'>
+        <div className='mt-4 flex justify-end'>
+          <button className='text-xs text-gray-500 hover:text-green-600 transition-colors'>
             Forgot Password?
-          </a>
+          </button>
         </div>
 
-        <div className='mt-5'>
+        <div className='mt-6'>
           <button
             type='button'
             onClick={handleLogin}
-            className='bg-green-600 text-white py-2 w-full rounded-md hover:bg-green-700 font-semibold transition-colors'
+            className='bg-green-600 text-white py-2.5 w-full rounded-lg hover:bg-green-700 font-bold shadow-lg transition-all active:scale-95'
           >
             Login
           </button>
         </div>
 
-        <div className='flex justify-center mt-4'>
-          <Link to='/register' className='text-sm text-gray-600 hover:text-green-600'>
-            Don't have an account? Register here
+        <div className='flex justify-center mt-6 border-t pt-4'>
+          <Link to='/register' className='text-sm text-gray-600 hover:text-green-600 font-medium'>
+            Don't have an account? <span className='text-green-600'>Register here</span>
           </Link>
         </div>
 
         {error && (
-          <div className='mt-4 text-red-600 flex justify-center font-bold text-sm text-center'>
+          <div className='mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm text-center font-semibold animate-pulse'>
             {error}
           </div>
         )}
