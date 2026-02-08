@@ -14,31 +14,38 @@ const FavoriteCard = ({ favorite }: FavoriteCardProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className='flex items-center justify-center'>
-      <div className='max-w-sm rounded-2xl overflow-hidden shadow-lg border border-gray-100'>
+        <div className='flex items-center justify-center h-full'>
+
+      <div className='w-full max-w-sm h-[450px] flex flex-col rounded-2xl overflow-hidden shadow-lg bg-white cursor-pointer hover:shadow-2xl transition-all'>
+
         <img
           src={favorite?.image || tripadvisorImg}
-          className='w-full h-48 object-cover cursor-pointer'
+          className='w-full h-80 object-cover '
           alt={favorite.name}
           onClick={() => navigate(favorite.link)}
         />
-        <div className='px-6 py-4'>
-          <div className='font-bold text-xl mb-2'>{favorite.name}</div>
-        </div>
-        <div className='px-6 pt-4 pb-2'>
-          <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
-            <div className='flex items-center gap-1'>
-              <FaStar className="text-yellow-500" />
-              <span>{favorite.rating}</span>
+       
+        <div className='px-6 py-4 flex-1 flex flex-col justify-between'>
+          <div>
+            <div className='font-bold text-xl mb-2 line-clamp-2 uppercase'>
+              {favorite.name}
             </div>
-          </span>
-          <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
-            <div className='flex items-center gap-1'>
-              <MdReviews className="text-blue-500" />
-              <span>{favorite.reviews}</span>
-            </div>
-          </span>
-          
+          </div>
+                    <div className='flex flex-wrap gap-2 pt-2'>
+                              <span className='inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>
+                                <div className='flex items-center gap-1'>
+                                  <FaStar className='text-yellow-500' />
+                                  <span>{favorite.rating}</span>
+                                </div>
+                              </span>
+                              <span className='inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>
+                                <div className='flex items-center gap-1'>
+                                  <MdReviews className='text-blue-500' />
+                                  <span>{favorite.reviews}</span>
+                                </div>
+                              </span>
+         
+          </div>
         </div>
       </div>
     </div>

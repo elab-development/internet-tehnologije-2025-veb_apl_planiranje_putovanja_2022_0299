@@ -12,7 +12,7 @@ class ImportController extends Controller
 {
     public function importFromTripAdvisor(Request $request)
     {
-        $trazeniPojam = $request->input('query', 'Rome');
+        $trazeniPojam = $request->input('query', 'New York');
         $apiKey = 'be309d377emsh9bf23ee50a29ea7p149e47jsnbbeca8701abf';
         $apiHost = 'tripadvisor-scraper.p.rapidapi.com';
 

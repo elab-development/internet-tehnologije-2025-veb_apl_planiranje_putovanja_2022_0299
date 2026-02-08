@@ -21,6 +21,8 @@ class AktivnostResource extends JsonResource
             'cena' => $this->cena !== null ? (float) $this->cena : null,
             'trajanje' => $this->trajanje,
             'opis' => $this->when($this->opis, $this->opis),
+            'slika' => $this->slika,
+
 
             'destinacija' => $this->whenLoaded('destinacija', function () {
                 return [
@@ -29,6 +31,8 @@ class AktivnostResource extends JsonResource
                     'slug' => $this->destinacija->slug,
                     'drzava' => $this->destinacija->drzava,
                     'region' => $this->destinacija->region,
+                    'slika' => $this->destinacija->slika,
+
                 ];
             }),
         ];

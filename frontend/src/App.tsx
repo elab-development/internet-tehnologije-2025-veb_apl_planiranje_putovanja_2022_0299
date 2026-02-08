@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Hotel from './pages/Hotel';
 import Restaurant from './pages/Restaurant';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { useLoggedIn } from './hooks/useLoggedIn';
 import FavoritesList from './components/search/FavoriteList'; 
 import Aktivnost from './pages/Aktivnost';
@@ -29,6 +30,7 @@ function App() {
 
 
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

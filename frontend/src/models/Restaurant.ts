@@ -32,6 +32,8 @@ export class RestaurantDetails {
   public image: string;
   public link: string;
   public address: string;
+  recenzije: any[]  ; 
+
 
   constructor(
     id: number,
@@ -42,6 +44,7 @@ export class RestaurantDetails {
     image: string,
     link: string,
     address: string,
+    recenzije: any[]=[]
   ) {
     this.id = id;
     this.name = name;
@@ -51,6 +54,8 @@ export class RestaurantDetails {
     this.image = image;
     this.link = link;
     this.address = address;
+    this.recenzije = recenzije; 
+
   
   }
 }

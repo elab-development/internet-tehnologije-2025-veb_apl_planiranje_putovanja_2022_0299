@@ -1,5 +1,5 @@
   import { useState } from 'react';
-  import { FaHotel, FaHeart, FaHiking, FaUsers } from 'react-icons/fa'; // Dodata FaHiking ikonica
+  import { FaHotel, FaHeart, FaHiking, FaUsers } from 'react-icons/fa'; 
   import { MdRestaurantMenu } from 'react-icons/md';
   import FilterItem from './FilterItem';
   import { useSearchTerm } from '../../hooks/useSearchTerm.hook';
@@ -34,7 +34,6 @@ import { useLoggedIn } from '../../hooks/useLoggedIn';
             name='restaurants' 
             icon={<MdRestaurantMenu className='w-6 h-6' />} 
           />
-          {/* NOVO: Stavka za aktivnosti */}
           <FilterItem 
             name='aktivnosti' 
             icon={<FaHiking className='w-6 h-6' />} 

@@ -22,17 +22,19 @@ class MestoResource extends JsonResource
             'tip' => $this->tip,
             'slug' => $this->slug,
             'adresa' => $this->adresa,
-            'geografska_sirina' => $this->geografska_sirina,
-            'geografska_duzina' => $this->geografska_duzina,
-            'prosecna_ocena' => $this->prosecna_ocena,
+            'slika' => $this->slika,
             'broj_recenzija' => (int) $this->broj_recenzija,
-        
+            'prosecna_ocena' => $this->prosecna_ocena !== null ? (float) $this->prosecna_ocena : null,
             'destinacija' => $this->whenLoaded('destinacija', function () {
                 return [
                     'id' => $this->destinacija->id,
                     'ime' => $this->destinacija->ime,
                     'slug' => $this->destinacija->slug,
                     'drzava' => $this->destinacija->drzava,
+                    'adresa' => $this->destinacija->adresa,
+                    'slika' => $this->destinacija->slika,
+                    'prosecna_ocena' => $this->destinacija->prosecna_ocena !== null ? (float) $this->destinacija->prosecna_ocena : null,
+
                 ];
             }),
             'recenzije' => RecenzijaResource::collection($this->whenLoaded('recenzije')),

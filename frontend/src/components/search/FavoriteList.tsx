@@ -4,7 +4,6 @@ import FavoriteCard from './FavoriteCard';
 const FavoritesList = () => {
   const { favorites } = useFavorites();
 
-  // OVO ĆE NAM REĆI ISTINU: Otvori konzolu (F12) i vidi šta piše
   console.log("Trenutni favoriti u listi:", favorites);
 
   if (!favorites || favorites.length === 0) {
@@ -17,7 +16,7 @@ const FavoritesList = () => {
   }
 
   return (
-    <div className='container mx-auto px-4'>
+    <div className='container mx-auto px-4 py-10'>
        <h1 className="text-3xl font-bold my-8">Your favorites</h1>
        <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10'>
         {favorites.map((favorite) => (

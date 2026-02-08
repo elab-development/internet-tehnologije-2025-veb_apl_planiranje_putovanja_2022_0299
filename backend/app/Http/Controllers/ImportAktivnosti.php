@@ -12,12 +12,11 @@ class ImportAktivnosti extends Controller
 {
     public function importAktivnosti(Request $request)
     {
-        $trazeniPojam = $request->input('query', 'Rome');
+        $trazeniPojam = $request->input('query', 'New York');
 
         $apiKey  = 'be309d377emsh9bf23ee50a29ea7p149e47jsnbbeca8701abf';
         $apiHost = 'tripadvisor-scraper.p.rapidapi.com';
 
-        // 1) destinacija mora postojati
         $destinacija = Destinacija::where('ime', 'LIKE', '%' . $trazeniPojam . '%')->first();
         if (!$destinacija) {
             return response()->json([
@@ -25,7 +24,6 @@ class ImportAktivnosti extends Controller
             ], 404);
         }
 
-        // 2) pozovi API
         $response = Http::withHeaders([
             'x-rapidapi-host' => $apiHost,
             'x-rapidapi-key'  => $apiKey,
@@ -51,7 +49,6 @@ class ImportAktivnosti extends Controller
             ], 200);
         }
 
-        // 3) importuj samo ATTRACTION
         $uvezeno = 0;
 
         foreach ($stavke as $stavka) {
@@ -62,7 +59,6 @@ class ImportAktivnosti extends Controller
                 continue;
             }
 
-            // 4) slika (rapidapi format često ima featured_image)
             $slika = null;
 
             if (!empty($stavka['featured_image'])) {
@@ -75,14 +71,12 @@ class ImportAktivnosti extends Controller
                 $slika = $stavka['photo']['url'];
             }
 
-            // 5) ostalo
             $opis = $stavka['description']
                 ?? ('Atrakcija u: ' . ($stavka['parent_location']['name'] ?? $destinacija->ime));
 
             $trajanje = $stavka['duration'] ?? '2-4 h';
             $cena = (float) rand(10, 50);
 
-            // 6) upis
             Aktivnost::updateOrCreate(
                 [
                     'naziv' => $naziv,
@@ -93,7 +87,7 @@ class ImportAktivnosti extends Controller
                     'cena' => $cena,
                     'trajanje' => $trajanje,
                     'opis' => $opis,
-                    'slika' => $slika, // <-- BITNO: mora da postoji kolona u bazi
+                    'slika' => $slika, 
                 ]
             );
 
@@ -103,7 +97,6 @@ class ImportAktivnosti extends Controller
         return response()->json([
             'status' => 'success',
             'poruka' => "Uspešno uvezeno $uvezeno atrakcija za " . $destinacija->ime,
-            // korisno dok testiraš:
             'debug_first_item' => $stavke[0] ?? null
         ]);
     }

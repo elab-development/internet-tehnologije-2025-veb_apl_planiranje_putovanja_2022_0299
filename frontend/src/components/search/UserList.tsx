@@ -24,7 +24,7 @@ const UsersList = () => {
         await axios.delete(`http://localhost:8000/api/users/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        fetchUsers(); // Osveži listu nakon brisanja
+        fetchUsers(); 
       } catch (err) {
         alert("Greška pri brisanju.");
       }

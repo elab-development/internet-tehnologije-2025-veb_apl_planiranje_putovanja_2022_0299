@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import tripadvisorImg from '../assets/tripadvisor.png';
+import defaultHotelsImg from '../assets/tripadvisor.png'; 
+
 import { useLoading } from '../hooks/useLoading';
 import Loader from '../components/Loader';
 import axios from 'axios';
@@ -10,111 +11,190 @@ const Hotel = () => {
   const [hotel, setHotel] = useState<HotelDetails | null>(null);
   const { loading, setLoading } = useLoading();
   const { id } = useParams();
-  
   const location = useLocation();
+  const [ocena, setOcena] = useState(5);
+  const [deskripcija, setDeskripcija] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
   const imageFromState = location.state?.imageFromList;
 
+  const ostaviRecenziju = async () => {
+    if (!deskripcija.trim()) {
+      alert("Molimo unesite komentar.");
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('user_role'); 
+
+    if (!token) {
+      alert("Morate biti ulogovani da biste ostavili utisak.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+   const r=   await axios.post('http://localhost:8000/api/recenzije', {
+
+        mesto_id: parseInt(id || "0"), 
+        ocena: ocena,
+        deskripcija: deskripcija
+        
+      }, {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json'
+        }
+      });
+      
+
+      alert("Recenzija je uspešno sačuvana!");
+      
+      setDeskripcija(""); 
+    //  window.location.reload(); 
+    } catch (error: any) {
+      //console.error("Greška:", error.response?.data);
+      if (error.response?.status === 422) {
+        alert("Već ste ostavili recenziju za ovo mesto.");
+      } else {
+        alert(error.response?.data?.message || "Greška pri slanju. Proverite dozvole na serveru.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchHotelDetails = async (idStr: string) => {
+    const fetchHotelsDetails = async (idStr: string) => {
       setLoading(true);
       try {
         const response = await axios.get(`http://localhost:8000/api/places/${idStr}`);
-        
-        // REŠENJE 1: Provera da li Laravel šalje podatke u "data" objektu
         const res = response.data.data ? response.data.data : response.data;
-        
-        console.log("Čist objekat za mapiranje:", res);
 
-        if (res) {
-          // REŠENJE 2: Precizno mapiranje po redosledu tvog konstruktora (9 parametara)
+        if (res && res.place) {
+
+          const p = res.place;
+       
+          // TAČNA LOGIKA: Saberemo TripAdvisor broj + naše postojeće recenzije
+        const statickiBroj = parseInt(p.reviews || p.broj_recenzija || "0");
+        const naseRecenzijeBroj = p.recenzije ? p.recenzije.length : 0;
+        const ukupnoRecenzija = statickiBroj + naseRecenzijeBroj;
+          
           const mappedHotel = new HotelDetails(
-            res.id,                                     // 1. id
-            res.name || res.ime || "Nepoznato",         // 2. name
-            Number(res.rating || res.prosecna_ocena || 0), // 3. rating
-            Number(res.reviews || res.broj_recenzija || 0),// 4. reviews
-            res.image || res.slika || "",               // 5. image
-            res.email || "",                            // 6. email
-            res.link || res.tripadvisor_link || "",     // 7. link
-            res.website || res.sajt || "",              // 8. website
-            res.address || res.adresa || "Nije dostupna" // 9. address
+            p.id,
+            p.name || p.ime || "Nepoznato",
+            Number(p.rating || p.prosecna_ocena || 0),
+            ukupnoRecenzija,
+            p.priceRange || "€€",                    
+            p.image || p.slika || "",                 
+            p.link || p.tripadvisor_link || "",       
+            p.address || p.adresa || "Nema adrese",   
+            p.recenzije || []                        
           );
-
           setHotel(mappedHotel);
         }
       } catch (error) {
         console.error("Greška pri učitavanju:", error);
-        setHotel(null);
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchHotelDetails(id);
+    if (id) fetchHotelsDetails(id);
   }, [id, setLoading]);
 
   if (loading) return <div className='flex justify-center mt-24'><Loader /></div>;
 
-  const finalImage = imageFromState || hotel?.image || tripadvisorImg;
+  const finalImage = imageFromState || hotel?.image || defaultHotelsImg;
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 pb-20">
       {!hotel && !loading && (
-        <h1 className='font-extrabold text-center text-3xl mt-24 text-red-600'>
-          Podaci o hotelu nisu pronađeni!
-        </h1>
+        <h1 className='font-extrabold text-center text-3xl mt-24 text-red-600'>Podaci nisu pronađeni!</h1>
       )}
       
       {hotel && (
         <>
-          <h1 className='font-extrabold text-center text-4xl md:text-5xl mt-12 md:mt-24 uppercase'>
+          
+          <h1 className='font-extrabold text-center text-4xl md:text-5xl mt-12 md:mt-24 uppercase text-gray-900'>
             {hotel.name}
           </h1>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-10 mt-10 mb-20'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-10 mt-10'>
+           
             <div className='flex items-center justify-center'>
-              <img
-                src={finalImage}
-                alt={hotel.name}
-                className='rounded-2xl w-full max-w-2xl h-[400px] object-cover shadow-2xl'
-              />
+              <img src={finalImage} alt={hotel.name} className='rounded-3xl w-full h-[450px] object-cover shadow-2xl shadow-black/20'/>
             </div>
 
             <div className='flex flex-col justify-center space-y-6'>
-              {/* ADRESA */}
-              <div className='bg-gray-50 p-6 rounded-2xl border border-gray-100 shadow-sm'>
-                <p className='text-2xl'>
-                  <span className='font-bold text-gray-700'>Adresa:</span> 
-                  <br /> 
-                  <span className='text-gray-600'>{hotel.address}</span>
-                </p>
-              </div>
+               
+
+                 <div className="p-4 bg-orange-50 rounded-2xl border border-orange-100 mb-6">
+                    <p className="text-orange-800 font-bold">📍 Adresa:</p>
+                    <p className="text-gray-700">{hotel.address}</p>
+                 </div>
+
+              
 
               <div className='grid grid-cols-2 gap-4'>
-                <div className='bg-yellow-50 p-4 rounded-xl border border-yellow-100 text-center shadow-sm'>
-                  <p className='text-sm text-yellow-600 font-bold uppercase'>Ocena</p>
+                <div className='bg-yellow-50 p-4 rounded-2xl border border-yellow-100 text-center'>
+                  <p className='text-sm text-yellow-600 font-bold uppercase text-xs'>Ocena</p>
                   <p className='text-3xl font-black'>⭐ {Number(hotel.rating).toFixed(1)}</p>
                 </div>
-
-                <div className='bg-blue-50 p-4 rounded-xl border border-blue-100 text-center shadow-sm'>
-                  <p className='text-sm text-blue-600 font-bold uppercase'>Recenzije</p>
+                <div className='bg-gray-50 p-4 rounded-2xl border border-gray-100 text-center'>
+                  <p className='text-sm text-gray-500 font-bold uppercase text-xs'>Recenzije</p>
                   <p className='text-3xl font-black'>💬 {hotel.reviews}</p>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className="flex flex-col gap-3 pt-4">
-                {hotel.website && (
-                  <a href={hotel.website} target='_blank' rel='noreferrer' 
-                     className="bg-gray-800 text-white text-center py-3 rounded-lg font-bold hover:bg-gray-700 transition-all">
-                    Poseti zvanični sajt
-                  </a>
-                )}
-                {hotel.link && (
-                  <a href={hotel.link} target='_blank' rel='noreferrer' 
-                     className="bg-green-600 text-white text-center py-3 rounded-lg font-bold hover:bg-green-500 transition-all">
-                    Pogledaj na TripAdvisor-u
-                  </a>
-                )}
-              </div>
+          <div className="mt-20 max-w-4xl mx-auto">
+            <h2 className="text-3xl font-black mb-10 border-l-8 border-orange-500 pl-4 uppercase">Iskustva posetilaca</h2>
+
+            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 mb-12">
+               <h3 className="font-bold text-xl mb-4">Vaš utisak o mestu:</h3>
+               <div className="flex gap-2 mb-4">
+                  {[1,2,3,4,5].map((num) => (
+                    <button key={num} onClick={() => setOcena(num)} className={`text-2xl transition-all ${ocena >= num ? 'scale-110' : 'grayscale opacity-30'}`}>
+                      ⭐
+                    </button>
+                  ))}
+               </div>
+               <textarea 
+                  value={deskripcija}
+                  onChange={(e) => setDeskripcija(e.target.value)}
+                  placeholder="Napišite nešto o hrani, ambijentu ili usluzi..."
+                  className="w-full p-4 rounded-2xl border border-gray-200 bg-gray-50 mb-4 h-32 focus:ring-2 focus:ring-orange-500 outline-none"
+               />
+               <button 
+                  onClick={ostaviRecenziju}
+                  disabled={submitting}
+                  className="bg-black text-white px-10 py-3 rounded-full font-bold hover:bg-orange-600 transition-all disabled:bg-gray-400"
+               >
+                  {submitting ? "Slanje..." : "OBJAVI RECENZIJU"}
+               </button>
+            </div>
+
+            <div className="space-y-6">
+              {hotel.recenzije && hotel.recenzije.length > 0 ? (
+                hotel.recenzije.map((r: any) => (
+                  <div key={r.id} className="bg-gray-50 p-6 rounded-2xl border-l-4 border-orange-500 flex flex-col gap-2 shadow-sm">
+                    <div className="flex justify-between items-center">
+                      <p className="font-black text-lg text-gray-800 uppercase flex items-center gap-2">
+                        {r.user?.name || r.user?.ime || "Korisnik"}
+                        {r.user?.role === 'admin' && <span className="text-[9px] bg-red-500 text-white px-2 py-0.5 rounded">ADMIN</span>}
+                      </p>
+                      <span className="bg-white px-3 py-1 rounded-full text-orange-600 font-bold border border-orange-100">⭐ {r.ocena}</span>
+                    </div>
+                    <p className="text-gray-600 italic leading-relaxed">"{r.deskripcija}"</p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-10 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+                   <p className="text-gray-400">Nema komentara. Budite prvi koji će oceniti ovaj restoran!</p>
+                </div>
+              )}
             </div>
           </div>
         </>

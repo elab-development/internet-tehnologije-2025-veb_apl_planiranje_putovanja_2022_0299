@@ -70,7 +70,7 @@ class RecenzijaController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        if (!$user || $user->role !== 'user') {
+        if (!$user || !in_array($user->role, ['user', 'admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -148,16 +148,30 @@ class RecenzijaController extends Controller
     }
 
     private function recalculatePlaceAggregates(int $placeId): void
-    {
-        $agg = Recenzija::where('mesto_id', $placeId)
-            ->selectRaw('COUNT(*) as cnt, COALESCE(AVG(ocena),0) as avg_ocena')
-            ->first();
+{
+    $agg = Recenzija::where('mesto_id', $placeId)
+        ->selectRaw('COUNT(*) as cnt, COALESCE(AVG(ocena),0) as avg_ocena')
+        ->first();
 
-        $place = Mesto::find($placeId);
-        if ($place) {
-            $place->broj_recenzija = (int) ($agg->cnt ?? 0);
-            $place->prosecna_ocena  = round((float) ($agg->avg_ocena ?? 0), 2);
-            $place->save();
-        }
-    }
+    $place = Mesto::find($placeId);
+    if (! $place) return;
+
+    $ourCount = (int) ($agg->cnt ?? 0);
+    $ourAvg   = (float) ($agg->avg_ocena ?? 0);
+
+    $staticCount = (int) ($place->broj_recenzija ?? 0);
+    $staticAvg   = (float) ($place->prosecna_ocena ?? 0);
+
+
+    $totalCount = $staticCount + $ourCount;
+
+    $totalAvg = $totalCount > 0
+        ? (($staticAvg * $staticCount) + ($ourAvg * $ourCount)) / $totalCount
+        : 0;
+
+    $place->broj_recenzija = $totalCount;
+    $place->prosecna_ocena = round($totalAvg, 2);
+    $place->save();
+}
+
 }

@@ -36,7 +36,6 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [searchedRestaurants, setSearchedRestaurants] = useState<SearchRestaurant[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // POPRAVKA: JSON.parse više neće pucati na "undefined"
   const [user, setUser] = useState<any>(() => {
     const savedUser = localStorage.getItem('user');
     if (!savedUser || savedUser === "undefined") return null;

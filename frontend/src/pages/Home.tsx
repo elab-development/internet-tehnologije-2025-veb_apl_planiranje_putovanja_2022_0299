@@ -12,7 +12,7 @@ import { searchAktivnostiInDb, importAktivnostiFromApi } from '../utils/Aktivnos
 import { SearchHotel } from '../models/Hotels';
 import { SearchRestaurant } from '../models/Restaurant';
 import { SearchAktivnost } from '../models/Aktivnost'; 
-import { useLoggedIn } from '../hooks/useLoggedIn'; // DODAJ OVO
+import { useLoggedIn } from '../hooks/useLoggedIn'; 
 import UsersList from '../components/search/UserList';
 
 const Home = () => {
@@ -20,14 +20,12 @@ const Home = () => {
   const { user } = useLoggedIn(); 
   const { setSearchedHotels } = useSearchedHotels();
   const { setSearchedRestaurants } = useSearchedRestaurants();
-  const { setSearchedAktivnosti } = useSearchedAktivnosti(); // DODAJ OVO
+  const { setSearchedAktivnosti } = useSearchedAktivnosti(); 
 
  const handleSearch = async (query: string) => {
-  // 1. BLOK ZA HOTELE I RESTORANE
   try {
     let res = await searchPlacesInDb(query);
     
-    // Ako nema podataka u bazi, pokrećemo import
     if (!res || res.count === 0) {
       await importFromApi(query);
       res = await searchPlacesInDb(query);
@@ -35,7 +33,6 @@ const Home = () => {
 
     const data = res.data || [];
 
-    // Mapiranje hotela koristeći tvoj SearchHotel model
     const hotels = data
       .filter((i: any) => i.tip === 'hotel')
       .map((h: any) => new SearchHotel(
@@ -47,7 +44,6 @@ const Home = () => {
         h.slika || ""
       ));
 
-    // Mapiranje restorana koristeći tvoj SearchRestaurant model
     const restaurants = data
       .filter((i: any) => i.tip === 'restoran')
       .map((r: any) => new SearchRestaurant(
@@ -65,12 +61,9 @@ const Home = () => {
   } catch (e) {
     console.error("Hoteli/Restorani greška:", e);
   }
-
-  // 2. POSEBAN BLOK ZA AKTIVNOSTI (Ovde se javlja 500 greška u konzoli)
   try {
     let resAktivnosti = await searchAktivnostiInDb(query);
     
-    // Ako baza vrati prazno za aktivnosti, pokušaj import specifičan za aktivnosti
     if (!resAktivnosti || resAktivnosti.count === 0) {
       await importAktivnostiFromApi(query);
       resAktivnosti = await searchAktivnostiInDb(query);
@@ -78,7 +71,6 @@ const Home = () => {
 
     const aktivnostiData = resAktivnosti.data || [];
 
-    // Mapiranje aktivnosti koristeći tvoj novi SearchAktivnost model
     const aktivnosti = aktivnostiData.map((a: any) => 
       new SearchAktivnost(
         a.id, 
@@ -86,14 +78,14 @@ const Home = () => {
         a.cena, 
         a.trajanje, 
         a.opis, 
-        a.slika || ""
+        a.image || a.slika || ""
+
       )
     );
 
     setSearchedAktivnosti(aktivnosti);
 
   } catch (e) {
-    // Čak i ako ovde baci 500, hoteli iznad će ostati učitani
     console.error("Aktivnosti greška (Proveri Laravel logove):", e);
   }
 
@@ -103,15 +95,11 @@ const Home = () => {
     <div>
       <MenuBar onSearch={handleSearch} />
       
-      {/* Prikazivanje na osnovu filtera */}
       {filter === 'hotels' && <HotelList />}
       {filter === 'restaurants' && <RestaurantList />}
-      
-      {/* DODATO: Prikaz liste aktivnosti */}
       {filter === 'aktivnosti' && <AktivnostList />}
       
       {filter === 'favorites' && <FavoritesList />}
-      {/* Prikazuje se samo ako je ulogovan admin */}
      
      {filter === 'users' && user?.role === 'admin' && (
           <UsersList />

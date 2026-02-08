@@ -40,9 +40,9 @@ export interface PriceRange {
     public image: string;
     public email: string;
     public link: string;
-    public website: string;
     public address: string;
-  
+    recenzije: any[]  ; 
+
     constructor(
       id: number,
       name: string,
@@ -51,8 +51,9 @@ export interface PriceRange {
       image: string,
       email: string,
       link: string,
-      website: string,
       address: string,
+          recenzije: any[]=[]
+
     ) {
       this.id = id;
       this.name = name;
@@ -61,7 +62,8 @@ export interface PriceRange {
       this.image = image;
       this.email = email;
       this.link = link;
-      this.website = website;
       this.address = address;
+      this.recenzije = recenzije; 
+
     }
   }

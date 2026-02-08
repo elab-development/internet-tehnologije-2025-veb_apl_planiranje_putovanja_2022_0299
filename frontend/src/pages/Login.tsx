@@ -14,36 +14,28 @@ const Login = () => {
   const handleLogin = async () => {
     setError('');
 
-    // Osnovna validacija polja
     if (!email || !password) { 
       setError('Please provide both email and password!'); 
       return; 
     }
 
     try {
-      // Pozivamo tvoj Laravel backend
       const response = await axios.post('http://localhost:8000/api/login', {
         email: email,
         password: password
       });
 
-      // Provera da li je server vratio token i podatke o korisniku
       if (response.data.access_token) {
-        // Podaci koje tvoj AuthController sada ispravno šalje
         const userData = response.data.user; 
 
-        // 1. Čuvanje tokena za API autorizaciju
         localStorage.setItem('token', response.data.access_token);
         
-        // 2. Čuvanje CELOG objekta korisnika kao JSON string-a
-        // Ovo rešava SyntaxError u ContextProvider-u
+       
         localStorage.setItem('user', JSON.stringify(userData)); 
         
-        // 3. Ažuriranje globalnog stanja aplikacije
         setUser(userData); 
         setLoggedIn(true);
         
-        // Preusmeravanje na početnu stranu gde će se sada videti ime i admin opcije
         navigate('/');
       }
     } catch (err: any) {
