@@ -24,7 +24,7 @@
                 "tags": [
                     "Aktivnosti"
                 ],
-                "summary": "Pretraga aktivnosti po nazivu ili opisu",
+                "summary": "Pretraga aktivnosti po nazivu",
                 "description": "Omogućava pretragu svih dostupnih aktivnosti na osnovu unetog teksta.",
                 "operationId": "eb60a2f2686dc1eec701a969ded94b53",
                 "parameters": [
@@ -187,7 +187,7 @@
                         }
                     },
                     "401": {
-                        "description": "Niste autorizovani (nedostaje ili je neispravan token)"
+                        "description": "Niste autorizovani (neispravan token)"
                     }
                 },
                 "security": [

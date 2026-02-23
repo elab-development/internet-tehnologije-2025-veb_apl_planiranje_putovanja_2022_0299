@@ -37,29 +37,32 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+
 Route::get('/destinations', [DestinacijaController::class, 'index']);
-Route::get('/destinations/{destination}', [DestinacijaController::class, 'show'] );
+    Route::get('/destinations/{destination}', [DestinacijaController::class, 'show'] );
 
 
-Route::get('/places', [MestoController::class, 'index']);
-Route::get('/places/{place}', [MestoController::class, 'show']);
+    Route::get('/places', [MestoController::class, 'index']);
+    Route::get('/places/{place}', [MestoController::class, 'show']);
+    Route::get('/aktivnosti/search', [AktivnostController::class, 'search']);
+
+    Route::get('/aktivnosti', [AktivnostController::class, 'index']);
+    Route::get('/aktivnosti/{aktivnost}', [AktivnostController::class, 'show']);
 
 Route::get('/search', [SearchController::class, 'search']);
-
-Route::get('/aktivnosti/search', [AktivnostController::class, 'search']);
-
-Route::get('/aktivnosti', [AktivnostController::class, 'index']);
-Route::get('/aktivnosti/{aktivnost}', [AktivnostController::class, 'show']);
-
-
-
-
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
          Route::get('/users', [AuthController::class, 'index']); 
     Route::delete('/users/{id}', [AuthController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/recenzije', [RecenzijaController::class, 'store']);
+
+    
+
+    
+
+    
+
 
 
         Route::post(

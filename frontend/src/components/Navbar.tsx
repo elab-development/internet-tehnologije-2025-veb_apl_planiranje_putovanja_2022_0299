@@ -59,5 +59,3 @@ const [user, setUser] = useState<any>(null);
 };
 
 export default Navbar;
-
-

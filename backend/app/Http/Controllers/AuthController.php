@@ -55,7 +55,6 @@ class AuthController extends Controller
         ]);
     }
     /**
-/**
  * @OA\Post(
  * path="/api/login",
  * summary="Logovanje korisnika",
@@ -116,7 +115,7 @@ class AuthController extends Controller
  * ),
  * @OA\Response(
  * response=401,
- * description="Niste autorizovani (nedostaje ili je neispravan token)"
+ * description="Niste autorizovani (neispravan token)"
  * )
  * )
  */

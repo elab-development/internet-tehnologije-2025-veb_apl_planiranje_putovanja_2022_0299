@@ -126,7 +126,7 @@ class AktivnostController extends Controller
     /**
  * @OA\Get(
  * path="/api/aktivnosti/search",
- * summary="Pretraga aktivnosti po nazivu ili opisu",
+ * summary="Pretraga aktivnosti po nazivu",
  * description="Omogućava pretragu svih dostupnih aktivnosti na osnovu unetog teksta.",
  * tags={"Aktivnosti"},
  * @OA\Parameter(

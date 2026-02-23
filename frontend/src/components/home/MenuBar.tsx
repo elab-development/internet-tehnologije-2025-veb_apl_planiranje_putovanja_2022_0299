@@ -3,7 +3,8 @@
   import { MdRestaurantMenu } from 'react-icons/md';
   import FilterItem from './FilterItem';
   import { useSearchTerm } from '../../hooks/useSearchTerm.hook';
-import { useLoggedIn } from '../../hooks/useLoggedIn';
+  import { useLoggedIn } from '../../hooks/useLoggedIn';
+  import { FaChartBar } from 'react-icons/fa';  
 
   interface MenuBarProps {
     onSearch: (query: string) => void;
@@ -43,6 +44,8 @@ import { useLoggedIn } from '../../hooks/useLoggedIn';
             name='favorites' 
             icon={<FaHeart className='w-6 h-6' />} 
           />
+
+          
             {user?.role === 'admin' && (
             <FilterItem 
               name='users' 
@@ -59,7 +62,6 @@ import { useLoggedIn } from '../../hooks/useLoggedIn';
             placeholder='Enter destination (e.g. Rome, New York)...'
             value={inputSearch}
             onChange={(e) => setInputSearch(e.target.value)}
-            // Omogućava pretragu na pritisak tastera Enter
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
           <button
