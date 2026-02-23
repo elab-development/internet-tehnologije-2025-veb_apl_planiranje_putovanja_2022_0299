@@ -1,0 +1,464 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Planiranje Putovanja API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/aktivnosti": {
+            "get": {
+                "tags": [
+                    "Aktivnosti"
+                ],
+                "summary": "Prikaz svih aktivnosti",
+                "operationId": "10991a526deb81a3255fe69c59f93a2a",
+                "responses": {
+                    "200": {
+                        "description": "Lista aktivnosti"
+                    }
+                }
+            }
+        },
+        "/api/aktivnosti/search": {
+            "get": {
+                "tags": [
+                    "Aktivnosti"
+                ],
+                "summary": "Pretraga aktivnosti po nazivu ili opisu",
+                "description": "Omogućava pretragu svih dostupnih aktivnosti na osnovu unetog teksta.",
+                "operationId": "eb60a2f2686dc1eec701a969ded94b53",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Tekst za pretragu",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Uspešna pretraga",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "naziv": {
+                                                "type": "string",
+                                                "example": "Obilazak Luvra"
+                                            },
+                                            "opis": {
+                                                "type": "string",
+                                                "example": "Detaljan obilazak muzeja sa vodičem."
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nije pronađena nijedna aktivnost sa tim pojmom"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Registracija novog korisnika",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Korisnik uspešno kreiran"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Logovanje korisnika",
+                "description": "Korisnik šalje kredencijale da bi dobio Bearer token.",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "admin@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Uspešan login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Pogrešan email ili lozinka"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Odjava korisnika",
+                "description": "Uništava trenutni pristupni token i odjavljuje korisnika sa sistema.",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Uspešna odjava",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Niste autorizovani (nedostaje ili je neispravan token)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Prikaz svih korisnika",
+                "operationId": "ce757d6a9dd9f3bf15fabb6611112518",
+                "responses": {
+                    "200": {
+                        "description": "Lista korisnika"
+                    },
+                    "403": {
+                        "description": "Samo admin može videti listu"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "delete": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Brisanje korisnika",
+                "operationId": "8d623c822968776003e4d1009d1321b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Korisnik obrisan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Provera servera",
+                "operationId": "dbf5a9bf30b7a151da01a66d1d925cd1",
+                "responses": {
+                    "200": {
+                        "description": "Server je online"
+                    }
+                }
+            }
+        },
+        "/api/destinations": {
+            "get": {
+                "tags": [
+                    "Destinacije"
+                ],
+                "summary": "Prikaz svih destinacija",
+                "operationId": "515f56cc341caff727ed108738329269",
+                "responses": {
+                    "200": {
+                        "description": "Lista destinacija"
+                    }
+                }
+            }
+        },
+        "/api/destinations/{destination}": {
+            "get": {
+                "tags": [
+                    "Destinacije"
+                ],
+                "summary": "Prikaz detalja jedne destinacije",
+                "operationId": "d02eefd6431a527f7d131a1174fcfc75",
+                "parameters": [
+                    {
+                        "name": "destination",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalji destinacije"
+                    }
+                }
+            }
+        },
+        "/api/import/destinations": {
+            "post": {
+                "tags": [
+                    "Import"
+                ],
+                "summary": "Uvoz destinacija sa eksternog API-ja",
+                "operationId": "a52e39a19372242cb5ef7c7bd317e0d4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "query": {
+                                        "type": "string",
+                                        "example": "Paris"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Uspešan uvoz"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/places": {
+            "get": {
+                "tags": [
+                    "Mesta"
+                ],
+                "summary": "Prikaz svih mesta (hoteli, restorani)",
+                "operationId": "2d9171f1b5501b2073740d0aa2e6d135",
+                "responses": {
+                    "200": {
+                        "description": "Lista mesta uspešno učitana"
+                    }
+                }
+            }
+        },
+        "/api/reviews": {
+            "post": {
+                "tags": [
+                    "Recenzije"
+                ],
+                "summary": "Ostavljanje recenzije",
+                "operationId": "a7d6e0359f43d623eebbb1101f37e395",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "komentar",
+                                    "ocena",
+                                    "mesto_id"
+                                ],
+                                "properties": {
+                                    "komentar": {
+                                        "type": "string",
+                                        "example": "Bilo je prelepo!"
+                                    },
+                                    "ocena": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "mesto_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Uspešno"
+                    },
+                    "422": {
+                        "description": "Greška u podacima"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/search": {
+            "get": {
+                "tags": [
+                    "Pretraga"
+                ],
+                "summary": "Globalna pretraga destinacija i mesta",
+                "operationId": "2754ee3c6371023cefd5b35cf65e9e07",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rezultati pretrage"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Aktivnosti",
+            "description": "Aktivnosti"
+        },
+        {
+            "name": "Autentifikacija",
+            "description": "Autentifikacija"
+        },
+        {
+            "name": "Destinacije",
+            "description": "Destinacije"
+        },
+        {
+            "name": "Import",
+            "description": "Import"
+        },
+        {
+            "name": "Mesta",
+            "description": "Mesta"
+        },
+        {
+            "name": "Recenzije",
+            "description": "Recenzije"
+        },
+        {
+            "name": "Pretraga",
+            "description": "Pretraga"
+        }
+    ]
+}

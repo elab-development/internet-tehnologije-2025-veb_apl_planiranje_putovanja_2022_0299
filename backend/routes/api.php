@@ -35,8 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::get('/user', [DestinacijaController::class, 'index']);
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/destinations', [DestinacijaController::class, 'index']);
 Route::get('/destinations/{destination}', [DestinacijaController::class, 'show'] );

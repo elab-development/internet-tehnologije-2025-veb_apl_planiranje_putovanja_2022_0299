@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use App\Models\Aktivnost;
@@ -10,6 +12,16 @@ use App\Http\Resources\AktivnostResource;
 
 class AktivnostController extends Controller
 {
+
+    /**
+ * @OA\Get(
+ * path="/api/aktivnosti",
+ * summary="Prikaz svih aktivnosti",
+ * tags={"Aktivnosti"},
+ * @OA\Response(response=200, description="Lista aktivnosti")
+ * )
+ */
+
     private function ensureAdmin()
     {
         $user = Auth::user();
@@ -110,6 +122,38 @@ class AktivnostController extends Controller
 
         return response()->json(['message' => 'Aktivnost deleted successfully']);
     }
+
+    /**
+ * @OA\Get(
+ * path="/api/aktivnosti/search",
+ * summary="Pretraga aktivnosti po nazivu ili opisu",
+ * description="Omogućava pretragu svih dostupnih aktivnosti na osnovu unetog teksta.",
+ * tags={"Aktivnosti"},
+ * @OA\Parameter(
+ * name="query",
+ * in="query",
+ * description="Tekst za pretragu",
+ * required=true,
+ * @OA\Schema(type="string")
+ * ),
+ * @OA\Response(
+ * response=200,
+ * description="Uspešna pretraga",
+ * @OA\JsonContent(
+ * type="array",
+ * @OA\Items(
+ * @OA\Property(property="id", type="integer", example=1),
+ * @OA\Property(property="naziv", type="string", example="Obilazak Luvra"),
+ * @OA\Property(property="opis", type="string", example="Detaljan obilazak muzeja sa vodičem.")
+ * )
+ * )
+ * ),
+ * @OA\Response(
+ * response=404,
+ * description="Nije pronađena nijedna aktivnost sa tim pojmom"
+ * )
+ * )
+ */
     public function search(Request $request)
 {
     $searchTerm = $request->query('query');

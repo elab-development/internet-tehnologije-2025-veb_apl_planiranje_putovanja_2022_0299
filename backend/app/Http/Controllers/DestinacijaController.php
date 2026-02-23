@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * @OA\Get(
+ * path="/api/destinations",
+ * operationId="getDestinationsList",
+ * tags={"Destinacije"},
+ * summary="Lista svih destinacija",
+ * description="Vraća sve destinacije sačuvasne u bazi",
+ * @OA\Response(
+ * response=200,
+ * description="Uspešno",
+ * @OA\JsonContent(type="array", @OA\Items())
+ * )
+ * )
+ */
+
 namespace App\Http\Controllers;
 
 use App\Models\Destinacija;
@@ -14,6 +29,16 @@ class DestinacijaController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    /**
+ * @OA\Get(
+ * path="/api/destinations",
+ * summary="Prikaz svih destinacija",
+ * tags={"Destinacije"},
+ * @OA\Response(response="200", description="Lista destinacija")
+ * )
+ */
+
     public function index(Request $request)
     {
         $q = trim((string) $request->query('q', ''));
@@ -103,6 +128,16 @@ class DestinacijaController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+ * @OA\Get(
+ * path="/api/destinations/{destination}",
+ * summary="Prikaz detalja jedne destinacije",
+ * tags={"Destinacije"},
+ * @OA\Parameter(name="destination", in="path", required=true, @OA\Schema(type="integer")),
+ * @OA\Response(response=200, description="Detalji destinacije")
+ * )
+ */
+
     public function show(Destinacija $destination)
     {
         $destination->load(['mesta', 'aktivnosti']);

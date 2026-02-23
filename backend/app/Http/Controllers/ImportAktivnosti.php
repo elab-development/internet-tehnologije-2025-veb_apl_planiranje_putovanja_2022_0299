@@ -14,7 +14,7 @@ class ImportAktivnosti extends Controller
     {
         $trazeniPojam = $request->input('query', 'New York');
 
-        $apiKey  = 'be309d377emsh9bf23ee50a29ea7p149e47jsnbbeca8701abf';
+        $apiKey  = 'ce23a52ce6msh5a373dd22d41887p1ecb9djsnfa5db3978346';
         $apiHost = 'tripadvisor-scraper.p.rapidapi.com';
 
         $destinacija = Destinacija::where('ime', 'LIKE', '%' . $trazeniPojam . '%')->first();

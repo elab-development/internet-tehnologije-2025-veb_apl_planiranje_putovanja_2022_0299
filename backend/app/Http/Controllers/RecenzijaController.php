@@ -14,6 +14,7 @@ class RecenzijaController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index(Request $request, Mesto $place)
     {
         $validated = $request->validate([
@@ -67,6 +68,26 @@ class RecenzijaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    /**
+ * @OA\Post(
+ * path="/api/reviews",
+ * summary="Ostavljanje recenzije",
+ * tags={"Recenzije"},
+ * security={{"sanctum":{}}},
+ * @OA\RequestBody(
+ * required=true,
+ * @OA\JsonContent(
+ * required={"komentar","ocena","mesto_id"},
+ * @OA\Property(property="komentar", type="string", example="Bilo je prelepo!"),
+ * @OA\Property(property="ocena", type="integer", example=5),
+ * @OA\Property(property="mesto_id", type="integer", example=1)
+ * )
+ * ),
+ * @OA\Response(response=201, description="Uspešno"),
+ * @OA\Response(response=422, description="Greška u podacima")
+ * )
+ */
     public function store(Request $request)
     {
         $user = Auth::user();

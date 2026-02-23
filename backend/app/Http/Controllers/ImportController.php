@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * @OA\Post(
+ * path="/api/import/destinations",
+ * summary="Uvoz podataka sa TripAdvisor-a",
+ * tags={"Import"},
+ * @OA\RequestBody(
+ * required=true,
+ * @OA\JsonContent(
+ * @OA\Property(property="query", type="string", example="Paris")
+ * )
+ * ),
+ * @OA\Response(response="200", description="Uspešan uvoz"),
+ * @OA\Response(response="400", description="Greška pri uvozu")
+ * )
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -10,10 +26,24 @@ use Illuminate\Support\Str;
 
 class ImportController extends Controller
 {
+    /**
+ * @OA\Post(
+ * path="/api/import/destinations",
+ * summary="Uvoz destinacija sa eksternog API-ja",
+ * tags={"Import"},
+ * security={{"sanctum":{}}},
+ * @OA\RequestBody(
+ * required=true,
+ * @OA\JsonContent(@OA\Property(property="query", type="string", example="Paris"))
+ * ),
+ * @OA\Response(response="200", description="Uspešan uvoz")
+ * )
+ */
+
     public function importFromTripAdvisor(Request $request)
     {
         $trazeniPojam = $request->input('query', 'New York');
-        $apiKey = 'be309d377emsh9bf23ee50a29ea7p149e47jsnbbeca8701abf';
+        $apiKey = 'ce23a52ce6msh5a373dd22d41887p1ecb9djsnfa5db3978346';
         $apiHost = 'tripadvisor-scraper.p.rapidapi.com';
 
         $destinacija = Destinacija::updateOrCreate(

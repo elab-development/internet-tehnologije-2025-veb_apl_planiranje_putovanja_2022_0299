@@ -10,6 +10,23 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    /**
+ * @OA\Post(
+ * path="/api/register",
+ * summary="Registracija novog korisnika",
+ * tags={"Autentifikacija"},
+ * @OA\RequestBody(
+ * required=true,
+ * @OA\JsonContent(
+ * @OA\Property(property="name", type="string"),
+ * @OA\Property(property="email", type="string"),
+ * @OA\Property(property="password", type="string")
+ * )
+ * ),
+ * @OA\Response(response="201", description="Korisnik uspešno kreiran")
+ * )
+ */
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -37,7 +54,31 @@ class AuthController extends Controller
             'token_type' => 'Bearer'
         ]);
     }
-
+    /**
+/**
+ * @OA\Post(
+ * path="/api/login",
+ * summary="Logovanje korisnika",
+ * description="Korisnik šalje kredencijale da bi dobio Bearer token.",
+ * tags={"Autentifikacija"},
+ * @OA\RequestBody(
+ * required=true,
+ * @OA\JsonContent(
+ * @OA\Property(property="email", type="string", example="admin@gmail.com"),
+ * @OA\Property(property="password", type="string", example="password")
+ * )
+ * ),
+ * @OA\Response(
+ * response=200,
+ * description="Uspešan login",
+ * @OA\JsonContent(
+ * @OA\Property(property="access_token", type="string"),
+ * @OA\Property(property="token_type", type="string", example="Bearer")
+ * )
+ * ),
+ * @OA\Response(response=401, description="Pogrešan email ili lozinka")
+ * )
+ */
     public function login(Request $request)
 {
     if (!Auth::attempt($request->only('email', 'password'))) {
@@ -59,6 +100,26 @@ class AuthController extends Controller
     ]);
 }
 
+/**
+ * @OA\Post(
+ * path="/api/logout",
+ * summary="Odjava korisnika",
+ * description="Uništava trenutni pristupni token i odjavljuje korisnika sa sistema.",
+ * tags={"Autentifikacija"},
+ * security={{"sanctum":{}}},
+ * @OA\Response(
+ * response=200,
+ * description="Uspešna odjava",
+ * @OA\JsonContent(
+ * @OA\Property(property="message", type="string", example="Logged out successfully")
+ * )
+ * ),
+ * @OA\Response(
+ * response=401,
+ * description="Niste autorizovani (nedostaje ili je neispravan token)"
+ * )
+ * )
+ */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()?->delete();
@@ -69,7 +130,16 @@ class AuthController extends Controller
     }
 
 
-
+/**
+ * @OA\Get(
+ * path="/api/users",
+ * summary="Prikaz svih korisnika",
+ * tags={"Autentifikacija"},
+ * security={{"sanctum":{}}},
+ * @OA\Response(response=200, description="Lista korisnika"),
+ * @OA\Response(response=403, description="Samo admin može videti listu")
+ * )
+ */
 public function index()
 {
     if (!Auth::user() || !Auth::user()->isAdmin()) {
@@ -80,7 +150,16 @@ public function index()
     return response()->json($users);
 }
 
-
+/**
+ * @OA\Delete(
+ * path="/api/users/{id}",
+ * summary="Brisanje korisnika",
+ * tags={"Autentifikacija"},
+ * security={{"sanctum":{}}},
+ * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ * @OA\Response(response=200, description="Korisnik obrisan")
+ * )
+ */
 public function destroy($id)
 {
     if (!Auth::user()->isAdmin()) {

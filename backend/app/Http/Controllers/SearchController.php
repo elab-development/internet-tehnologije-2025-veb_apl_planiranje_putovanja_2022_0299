@@ -8,6 +8,17 @@ use App\Models\Destinacija;
 
 class SearchController extends Controller
 {
+
+    /**
+ * @OA\Get(
+ * path="/api/search",
+ * summary="Globalna pretraga destinacija i mesta",
+ * tags={"Pretraga"},
+ * @OA\Parameter(name="query", in="query", required=true, @OA\Schema(type="string")),
+ * @OA\Response(response=200, description="Rezultati pretrage")
+ * )
+ */
+
     public function search(Request $request)
     {
         $query = $request->query('query');

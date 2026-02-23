@@ -15,6 +15,15 @@ class MestoController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+ * @OA\Get(
+ * path="/api/places",
+ * summary="Prikaz svih mesta (hoteli, restorani)",
+ * tags={"Mesta"},
+ * @OA\Response(response="200", description="Lista mesta uspešno učitana")
+ * )
+ */
+
     public function index(Request $request)
     {
         $validated = $request->validate([
