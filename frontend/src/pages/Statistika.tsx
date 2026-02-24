@@ -33,7 +33,8 @@ const Statistika = () => {
     atrakcije = stateData.brojAktivnosti || 0;
     restorani = stateData.brojRestorana || 0;
     hoteli = stateData.brojHotela || 0;
-    naslov = `Analiza za destinaciju: ${stateData.grad || "Pretraga"}`;
+    const gradNaziv = stateData.grad || "Pretraga";
+    naslov = `Analiza za destinaciju: ${gradNaziv.charAt(0).toUpperCase() + gradNaziv.slice(1)}`;
   } else {
     atrakcije = mesta.filter((m) => m.tip === 'atrakcija').length;
     restorani = mesta.filter((m) => m.tip === 'restoran').length;
@@ -43,7 +44,7 @@ const Statistika = () => {
 
   const dataForChart = [
     ["Kategorija", "Broj"],
-    ["Turističke Atrakcije", atrakcije],
+    ["Turističke Aktivnosti", atrakcije],
     ["Restorani i kafići", restorani],
     ["Smeštaj (Hoteli)", hoteli],
   ];
@@ -79,7 +80,7 @@ const Statistika = () => {
       
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="p-6 bg-green-50 rounded-2xl border-b-4 border-green-400 text-center">
-            <span className="block text-sm font-bold text-green-600 uppercase">Atrakcije</span>
+            <span className="block text-sm font-bold text-green-600 uppercase">Aktivnosti</span>
             <span className="text-4xl font-black text-green-800">{atrakcije}</span>
           </div>
           <div className="p-6 bg-yellow-50 rounded-2xl border-b-4 border-yellow-400 text-center">
