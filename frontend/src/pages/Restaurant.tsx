@@ -5,6 +5,7 @@ import { useLoading } from '../hooks/useLoading';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import {  RestaurantDetails } from '../models/Restaurant'; 
+import { API_BASE_URL } from '../utils/apiBaseUrl';
 
 const Restaurant = () => {
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
@@ -33,7 +34,7 @@ const Restaurant = () => {
 
     setSubmitting(true);
     try {
-      await axios.post('http://localhost:8000/api/recenzije', {
+      await axios.post(`${API_BASE_URL}/recenzije`, {
         mesto_id: parseInt(id || "0"), 
         ocena: ocena,
         deskripcija: deskripcija
@@ -63,7 +64,7 @@ const Restaurant = () => {
     const fetchRestaurantDetails = async (idStr: string) => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8000/api/places/${idStr}`);
+        const response = await axios.get(`${API_BASE_URL}/places/${idStr}`);
         const res = response.data.data ? response.data.data : response.data;
 
         if (res && res.place) {

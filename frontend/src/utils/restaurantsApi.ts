@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { API_BASE_URL } from './apiBaseUrl';
 
-const BASE_URL = 'http://localhost:8000/api';
 
 export const getRestaurantsDetails = async (id: string) => {
-  const response = await axios.get(`${BASE_URL}/places/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/places/${id}`);
   return response.data; 
 };

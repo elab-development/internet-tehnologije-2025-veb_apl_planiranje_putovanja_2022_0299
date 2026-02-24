@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../utils/apiBaseUrl";
 
 const Statistika = () => {
   const location = useLocation();
@@ -12,7 +13,7 @@ const Statistika = () => {
 
   useEffect(() => {
     if (!stateData) {
-      axios.get("http://localhost:8000/api/mesta")
+      axios.get(`${API_BASE_URL}/mesta`)
         .then((res) => {
           const data = Array.isArray(res.data) ? res.data : res.data.data;
           setMesta(data || []);

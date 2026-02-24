@@ -6,6 +6,7 @@ import { useLoading } from '../hooks/useLoading';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import { HotelDetails } from '../models/Hotels';
+import { API_BASE_URL } from '../utils/apiBaseUrl';
 
 const Hotel = () => {
   const [hotel, setHotel] = useState<HotelDetails | null>(null);
@@ -34,7 +35,7 @@ const Hotel = () => {
 
     setSubmitting(true);
     try {
-   const r=   await axios.post('http://localhost:8000/api/recenzije', {
+   const r=   await axios.post(`${API_BASE_URL}/recenzije`, {
 
         mesto_id: parseInt(id || "0"), 
         ocena: ocena,
@@ -68,7 +69,7 @@ const Hotel = () => {
     const fetchHotelsDetails = async (idStr: string) => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8000/api/places/${idStr}`);
+        const response = await axios.get(`${API_BASE_URL}/places/${idStr}`);
         const res = response.data.data ? response.data.data : response.data;
 
         if (res && res.place) {

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/apiBaseUrl';
 
 const UsersList = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -8,7 +9,7 @@ const UsersList = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:8000/api/users', {
+      const res = await axios.get(`${API_BASE_URL}/users`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(res.data);
@@ -21,7 +22,7 @@ const UsersList = () => {
     if (window.confirm('Sigurno želiš da obrišeš ovog korisnika?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:8000/api/users/${id}`, {
+        await axios.delete(`${API_BASE_URL}/users/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         fetchUsers(); 
