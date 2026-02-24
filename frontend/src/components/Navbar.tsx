@@ -1,63 +1,72 @@
-import { Link } from 'react-router-dom';
-import logo from '../assets/logo2.svg';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLoggedIn } from '../hooks/useLoggedIn';
-import { useEffect, useState } from 'react';
-import tripadvisorLogo from '../assets/tripadvisor.png';
 
+// Definišemo interfejs da Navbar zna šta su "stats"
+interface NavbarProps {
+  stats?: {
+    brojHotela: number;
+    brojRestorana: number;
+    brojAktivnosti: number;
+    grad: string;
+  }
+}
 
-const Navbar = () => {
-const [user, setUser] = useState<any>(null);
+const Navbar = ({ stats }: NavbarProps) => {
+  const [user, setUser] = useState<any>(null);
   const { loggedIn, setLoggedIn } = useLoggedIn();
+  const navigate = useNavigate();
 
   useEffect(() => {
-  const storage = localStorage.getItem('user');
-  if (storage && storage !== "undefined") {
-    try {
-      setUser(JSON.parse(storage)); 
-    } catch (e) {
-      setUser("");
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
-  }
-}, [loggedIn]);
+  }, [loggedIn]);
 
-  <div className="flex items-center gap-2">
-  <img src={tripadvisorLogo} alt="Tripadvisor" className="h-8 w-auto" />
-  <span className="font-bold text-xl">Tripadvisor</span>
-</div>
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    navigate('/');
+  };
 
   return (
-     <div className='flex py-4 sm:pl-20 sm:justify-between items-center navbar flex-col sm:flex-row'>
-      <Link to={'/'} className='flex items-center gap-3'>
-        <img src={tripadvisorLogo} 
-         alt="Tripadvisor"
-          className="h-8 w-auto object-contain" />
-        <h1 className='font-bold text-2xl'>Tripadvisor</h1>
-      </Link>
-      <div className='flex justify-end gap-10 sm:mr-20'>
-        {user && (
-          <h1 className='font-semibold mt-2'>
-              Welcome, <span className='text-green-500'>
-                {/* DODAJ .ime OVDE da bi pisalo samo mina */}
-                {user?.ime || 'User'} 
-              </span> !
-          </h1>
-        )}
+    <nav className="flex py-4 px-10 justify-between items-center bg-white border-b">
+      <div className="flex items-center gap-2">
+        <Link to="/">
+          <img 
+            src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" 
+            alt="Tripadvisor" 
+            className="h-6" 
+          />
+        </Link>
+      </div>
+
+      <div className="flex gap-6 items-center">
         {loggedIn && (
-          <Link
-           to={'/login'}
-           onClick={() => {
-             localStorage.removeItem('user');
-             setLoggedIn(false);
-           }}
-         >
-            <h1 className='font-semibold mt-2'>Logout</h1>
-          </Link>
+          <>
+            <h1 className="font-medium text-sm">
+              Welcome, <span className="text-green-600 font-bold">{user?.ime || 'Danica'}!</span>
+            </h1>
+
+            {/* KLJUČNI DEO: Prosleđujemo stats u statistiku */}
+            <Link 
+              to="/statistika" 
+              state={stats} 
+              className="flex items-center gap-1 text-sm font-bold hover:text-green-600 transition-colors"
+            >
+              📊 Statistika
+            </Link>
+
+            <button onClick={handleLogout} className="text-sm font-bold hover:underline">
+              Logout
+            </button>
+          </>
         )}
       </div>
-      </div>
+    </nav>
   );
 };
 
 export default Navbar;
-
-

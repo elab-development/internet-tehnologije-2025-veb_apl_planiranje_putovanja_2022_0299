@@ -15,12 +15,16 @@ import { SearchAktivnost } from '../models/Aktivnost';
 import { useLoggedIn } from '../hooks/useLoggedIn'; 
 import UsersList from '../components/search/UserList';
 
+
+
 const Home = () => {
   const { filter } = useFilter(); 
   const { user } = useLoggedIn(); 
   const { setSearchedHotels } = useSearchedHotels();
   const { setSearchedRestaurants } = useSearchedRestaurants();
   const { setSearchedAktivnosti } = useSearchedAktivnosti(); 
+
+  
 
  const handleSearch = async (query: string) => {
   try {
@@ -30,6 +34,8 @@ const Home = () => {
       await importFromApi(query);
       res = await searchPlacesInDb(query);
     }
+
+    
 
     const data = res.data || [];
 

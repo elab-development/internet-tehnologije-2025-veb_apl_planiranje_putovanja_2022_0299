@@ -9,6 +9,8 @@ import Footer from './components/Footer';
 import { useLoggedIn } from './hooks/useLoggedIn';
 import FavoritesList from './components/search/FavoriteList'; 
 import Aktivnost from './pages/Aktivnost';
+import Statistika from './pages/Statistika';
+
 
 function App() {
   const { loggedIn } = useLoggedIn();
@@ -27,7 +29,7 @@ function App() {
         <Route path='/hotels/:id' element={loggedIn ? <Hotel /> : <Navigate to={'/login'} />} />
         <Route path='/restaurants/:id' element={loggedIn ? <Restaurant /> : <Navigate to={'/login'} />} />
         <Route path='/aktivnost/:id' element={loggedIn ? <Aktivnost /> : <Navigate to={'/login'} />} />
-
+        <Route path="/statistika" element={<Statistika/>} />
 
       </Routes>
       <Footer />
