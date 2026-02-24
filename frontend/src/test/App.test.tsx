@@ -25,6 +25,7 @@ describe('Navbar component', () => {
       </ContextProvider>
     );
 
+    
     const logoLink = screen.getByRole('link', { name: /.*/ }); 
     expect(logoLink.getAttribute('href')).toBe('/');
   });
