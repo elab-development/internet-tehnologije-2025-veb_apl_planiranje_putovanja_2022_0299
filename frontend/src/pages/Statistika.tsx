@@ -1,3 +1,4 @@
+// Dashboard vizuelizacija podataka
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { useLocation } from "react-router-dom";
@@ -92,6 +93,7 @@ const Statistika = () => {
             <span className="text-4xl font-black text-red-800">{hoteli}</span>
           </div>
         </div>
+
 
         
         <div className="bg-gray-50 rounded-3xl p-6 flex justify-center">
