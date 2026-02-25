@@ -11,18 +11,6 @@ WORKDIR /var/www
 
 COPY . .
 
-# Init hook za Railway hosting
-RUN set -eux; \
-    if [ -f /var/www/railway/init-app.sh ]; then \
-        cp /var/www/railway/init-app.sh /usr/local/bin/init-app.sh; \
-    elif [ -f /var/www/backend/railway/init-app.sh ]; then \
-        cp /var/www/backend/railway/init-app.sh /usr/local/bin/init-app.sh; \
-    else \
-        echo "init-app.sh not found in expected location" >&2; \
-        exit 1; \
-    fi; \
-    chmod +x /usr/local/bin/init-app.sh
-
 
 RUN composer install --no-interaction --optimize-autoloader
 
