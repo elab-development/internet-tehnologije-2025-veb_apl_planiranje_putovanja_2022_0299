@@ -6,7 +6,7 @@ import { ContextProvider } from '../context/ContextProvider';
 
 vi.mock('../hooks/useLoggedIn', () => {
   const mockValue = {
-    loggedIn: false,
+    loggedIn: true,
     setLoggedIn: vi.fn(),
   };
   return {
@@ -25,7 +25,11 @@ describe('Navbar component', () => {
       </ContextProvider>
     );
 
-    const logoLink = screen.getByRole('link', { name: /.*/ }); 
+    const mockUser = { ime: 'Mina' };
+    localStorage.setItem('user', JSON.stringify(mockUser));
+
+    const logoLink = screen.getByRole('link', { name: /Tripadvisor/i }); 
     expect(logoLink.getAttribute('href')).toBe('/');
   });
 });
+
